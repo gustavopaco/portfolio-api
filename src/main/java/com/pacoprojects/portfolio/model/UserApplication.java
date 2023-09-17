@@ -3,26 +3,24 @@ package com.pacoprojects.portfolio.model;
 import com.pacoprojects.portfolio.model.converter.UserRoleApplicationConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@Table(name = "user-application")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "user-application",
+        uniqueConstraints = {@UniqueConstraint(name = "unique_username", columnNames = "username")})
 @Entity
 public class UserApplication implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
     @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1)
@@ -42,7 +40,13 @@ public class UserApplication implements UserDetails {
     private UserRoleApplication userRoleApplication;
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled = true;
+    private boolean enabled;
+
+    @Column(name = "locked", nullable = false)
+    private boolean locked;
+
+    @OneToMany(targetEntity = TokenConfirmation.class, mappedBy = "userApplication", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<TokenConfirmation> tokenConfirmations = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -57,7 +61,7 @@ public class UserApplication implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
