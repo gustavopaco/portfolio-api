@@ -7,9 +7,13 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +24,19 @@ import java.util.function.Function;
 public class JwtUtilService {
 
     private final JwtConfig jwtConfig;
+
+    public String generateToken(UserDetails user) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("authorities", user.getAuthorities());
+        return Jwts
+                .builder()
+                .setSubject(user.getUsername())
+                .addClaims(map)
+                .setIssuedAt(new Date())
+                .setExpiration(getExpirationDate())
+                .signWith(getSigningKey())
+                .compact();
+    }
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtConfig.getSecretKey().getBytes());
@@ -64,5 +81,9 @@ public class JwtUtilService {
 
     private String getBasicToken(String fullToken) {
         return fullToken.replace(jwtConfig.getPrefix() + " ", "");
+    }
+
+    private Date getExpirationDate() {
+        return Date.from(LocalDateTime.now().plusDays(jwtConfig.getDaysExpiration()).toInstant(ZoneOffset.of(ZonedDateTime.now().getOffset().toString())));
     }
 }
