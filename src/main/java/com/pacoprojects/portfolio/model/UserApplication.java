@@ -69,6 +69,16 @@ public class UserApplication implements UserDetails {
         return true;
     }
 
+    public void addTokenConfirmation(TokenConfirmation tokenConfirmation) {
+        tokenConfirmations.add(tokenConfirmation);
+        tokenConfirmation.setUserApplication(this);
+    }
+
+    public void removeTokenConfirmation(TokenConfirmation tokenConfirmation) {
+        tokenConfirmations.remove(tokenConfirmation);
+        tokenConfirmation.setUserApplication(null);
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

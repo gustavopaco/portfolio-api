@@ -83,7 +83,7 @@ public class JwtUtilService {
         return fullToken.replace(jwtConfig.getPrefix() + " ", "");
     }
 
-    private Date getExpirationDate() {
+    public Date getExpirationDate() {
         return Date.from(LocalDateTime.now().plusDays(jwtConfig.getDaysExpiration()).toInstant(ZoneOffset.of(ZonedDateTime.now().getOffset().toString())));
     }
 }

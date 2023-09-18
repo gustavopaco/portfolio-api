@@ -10,4 +10,11 @@ public class Messages {
     /*Jwt Token Messages*/
     public static final String TOKEN_EXPIRED = "Token expired";
     public static final String INVALID_TOKEN = "Invalid token";
+
+    /*Authentication Messages*/
+    public static final String INVALID_CREDENTIALS = "Invalid credentials";
+    public static final String USER_NOT_ACTIVE = "User not active";
+
+    /*Internal Messages*/
+    public static final String INTERNAL_ERROR = "Unexpected error on server";
 }
