@@ -1,47 +1,45 @@
 package com.pacoprojects.portfolio.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@Table(name = "token_confirmation")
+@Table(name = "skill")
 @Entity
-public class TokenConfirmation {
-
+public class Skill {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_confirmation_gen")
-    @SequenceGenerator(name = "token_confirmation_gen", sequenceName = "token_confirmation_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skill_gen")
+    @SequenceGenerator(name = "skill_gen", sequenceName = "skill_seq", allocationSize = 1)
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @Column(name = "name", nullable = false, length = 20)
+    @NotBlank(message = "Name is mandatory")
+    private String name;
+
+    @Column(name = "description", length = 100)
+    private String description;
+
     @Lob
-    @Column(name = "token")
-    private String token;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "expired_at", nullable = false)
-    private LocalDateTime expiredAt;
-
-    @Column(name = "confirmed_at")
-    private LocalDateTime confirmedAt;
+    @Column(name = "url", nullable = false)
+    @NotBlank(message = "Url is mandatory")
+    private String url;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_application_id", nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "user_application_id_fk", value = ConstraintMode.CONSTRAINT))
+    @NotNull(message = "UserApplication is mandatory")
     private UserApplication userApplication;
 
     @Override
@@ -51,8 +49,8 @@ public class TokenConfirmation {
         Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        TokenConfirmation that = (TokenConfirmation) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        Skill skill = (Skill) o;
+        return getId() != null && Objects.equals(getId(), skill.getId());
     }
 
     @Override

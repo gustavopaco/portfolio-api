@@ -1,8 +1,10 @@
 package com.pacoprojects.portfolio.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pacoprojects.portfolio.model.converter.UserRoleApplicationConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,26 +29,33 @@ public class UserApplication implements UserDetails {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @NotBlank(message = "Username is mandatory")
     @Column(name = "username", length = 100, nullable = false)
+    @NotBlank(message = "Username is mandatory")
     private String username;
 
-    @NotBlank(message = "Password is mandatory")
     @Column(name = "password", length = 100, nullable = false)
+    @NotBlank(message = "Password is mandatory")
     private String password;
 
     @Column(name = "role", length = 10, nullable = false)
     @Convert(converter = UserRoleApplicationConverter.class)
+    @NotNull(message = "Role is mandatory")
     private UserRoleApplication userRoleApplication;
 
     @Column(name = "enabled", nullable = false)
+    @JsonIgnore
     private boolean enabled;
 
     @Column(name = "locked", nullable = false)
+    @JsonIgnore
     private boolean locked;
 
-    @OneToMany(targetEntity = TokenConfirmation.class, mappedBy = "userApplication", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = TokenConfirmation.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<TokenConfirmation> tokenConfirmations = new LinkedHashSet<>();
+
+    @OneToMany(targetEntity = Skill.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<Skill> skills = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -77,6 +86,16 @@ public class UserApplication implements UserDetails {
     public void removeTokenConfirmation(TokenConfirmation tokenConfirmation) {
         tokenConfirmations.remove(tokenConfirmation);
         tokenConfirmation.setUserApplication(null);
+    }
+
+    public void addSkill(Skill skill) {
+        skills.add(skill);
+        skill.setUserApplication(this);
+    }
+
+    public void removeSkill(Skill skill) {
+        skills.remove(skill);
+        skill.setUserApplication(null);
     }
 
     @Override
