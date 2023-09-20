@@ -2,6 +2,7 @@ package com.pacoprojects.portfolio.controller;
 
 import com.pacoprojects.portfolio.dto.SkillDto;
 import com.pacoprojects.portfolio.dto.SkillProjection;
+import com.pacoprojects.portfolio.dto.UserApplicationSkillsProjection;
 import com.pacoprojects.portfolio.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -21,9 +22,14 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("{id}")
+    @GetMapping("{id}/skill")
     public ResponseEntity<List<SkillProjection>> listSkillsByUser(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(userService.listSkillsByUser(id));
+    }
+
+    @GetMapping("owner")
+    public ResponseEntity<UserApplicationSkillsProjection> getOwnerData() {
+        return ResponseEntity.ok(userService.getOwnerData());
     }
 
     @PostMapping("skill")

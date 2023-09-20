@@ -43,6 +43,10 @@ public class UserApplication implements UserDetails {
     @NotNull(message = "Role is mandatory")
     private UserRoleApplication userRoleApplication;
 
+    @Lob
+    @Column(name = "url_picture")
+    private String urlPicture;
+
     @Column(name = "enabled", nullable = false)
     @JsonIgnore
     private boolean enabled;
