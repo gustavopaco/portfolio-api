@@ -1,4 +1,4 @@
-package com.pacoprojects.portfolio.model;
+package com.pacoprojects.portfolio.model.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

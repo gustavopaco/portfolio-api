@@ -1,11 +1,13 @@
-package com.pacoprojects.portfolio.model.converter;
+package com.pacoprojects.portfolio.model.enums.converter;
 
 import com.pacoprojects.portfolio.constants.Messages;
-import com.pacoprojects.portfolio.model.UserRoleApplication;
+import com.pacoprojects.portfolio.model.enums.UserRoleApplication;
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 import java.util.stream.Stream;
 
+@Converter(autoApply = true)
 public class UserRoleApplicationConverter implements AttributeConverter<UserRoleApplication, String> {
 
     @Override

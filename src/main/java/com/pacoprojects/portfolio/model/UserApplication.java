@@ -1,7 +1,8 @@
 package com.pacoprojects.portfolio.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pacoprojects.portfolio.model.converter.UserRoleApplicationConverter;
+import com.pacoprojects.portfolio.model.enums.converter.UserRoleApplicationConverter;
+import com.pacoprojects.portfolio.model.enums.UserRoleApplication;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
