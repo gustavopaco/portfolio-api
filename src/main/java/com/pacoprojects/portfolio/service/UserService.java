@@ -3,10 +3,9 @@ package com.pacoprojects.portfolio.service;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.SkillDto;
 import com.pacoprojects.portfolio.dto.SkillProjection;
-import com.pacoprojects.portfolio.dto.UserApplicationSkillsProjection;
+import com.pacoprojects.portfolio.dto.UserApplicationProjectsSkillsProjection;
 import com.pacoprojects.portfolio.exception.RecordNotFoundException;
 import com.pacoprojects.portfolio.mapper.SkillMapper;
-import com.pacoprojects.portfolio.model.UserApplication;
 import com.pacoprojects.portfolio.repository.SkillRepository;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +31,7 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public UserApplicationSkillsProjection getOwnerData() {
+    public UserApplicationProjectsSkillsProjection getOwnerData() {
         return userApplicationRepository.findUserApplicationByUsername(ownerUsername)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }

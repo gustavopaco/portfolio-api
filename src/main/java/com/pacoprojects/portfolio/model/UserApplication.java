@@ -62,6 +62,10 @@ public class UserApplication implements UserDetails {
     @ToString.Exclude
     private Set<Skill> skills = new LinkedHashSet<>();
 
+    @OneToMany(targetEntity = Project.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<Project> projects = new LinkedHashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRoleApplication.name());
