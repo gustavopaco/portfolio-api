@@ -32,8 +32,7 @@ public class Project {
     @NotBlank(message = "Description is mandatory")
     private String description;
 
-    @Lob
-    @Column(name = "url", nullable = false)
+    @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "Url is mandatory")
     private String url;
 

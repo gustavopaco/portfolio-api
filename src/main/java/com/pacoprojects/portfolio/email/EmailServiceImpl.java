@@ -22,7 +22,7 @@ public class EmailServiceImpl implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
     private static final String EMAIL_ERROR_MESSAGE = "Failed to send Email";
     @Value("${spring.mail.username}")
-    private static String sender;
+    private String sender;
 
     @Override
     @Async

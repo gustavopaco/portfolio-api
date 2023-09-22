@@ -1,6 +1,7 @@
 package com.pacoprojects.portfolio.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,8 +25,8 @@ public class TokenConfirmation {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Lob
-    @Column(name = "token")
+    @Column(name = "token", columnDefinition = "TEXT", nullable = false)
+    @NotBlank(message = "Token is mandatory")
     private String token;
 
     @Column(name = "created_at", nullable = false)

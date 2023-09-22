@@ -38,13 +38,12 @@ public class UserApplication implements UserDetails {
     @NotBlank(message = "Password is mandatory")
     private String password;
 
-    @Column(name = "role", length = 10, nullable = false)
+    @Column(name = "role", length = 20, nullable = false)
     @Convert(converter = UserRoleApplicationConverter.class)
     @NotNull(message = "Role is mandatory")
     private UserRoleApplication userRoleApplication;
 
-    @Lob
-    @Column(name = "url_picture")
+    @Column(name = "url_picture", columnDefinition = "TEXT")
     private String urlPicture;
 
     @Column(name = "enabled", nullable = false)

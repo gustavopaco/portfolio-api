@@ -29,8 +29,7 @@ public class Skill {
     @Column(name = "description", length = 100)
     private String description;
 
-    @Lob
-    @Column(name = "url", nullable = false)
+    @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "Url is mandatory")
     private String url;
 

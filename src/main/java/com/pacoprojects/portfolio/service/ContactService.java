@@ -6,7 +6,6 @@ import com.pacoprojects.portfolio.email.EmailObject;
 import com.pacoprojects.portfolio.email.EmailService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ public class ContactService {
     private final EmailService emailService;
     private static final String SUBJECT = "New Contact Request";
     @Value("${spring.mail.personal.username}")
-    private static String recipient;
+    private String recipient;
 
     public void sendEmail(@NotNull ContactRequest contactRequest) {
         emailService.sendMailWithAttachment(EmailObject.builder()

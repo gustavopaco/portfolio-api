@@ -70,6 +70,7 @@ public class AuthService {
     }
 
     private void addHeaderResponse(HttpServletResponse response, String fullToken) {
+        response.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);
         response.addHeader(HttpHeaders.AUTHORIZATION, fullToken);
     }
 }

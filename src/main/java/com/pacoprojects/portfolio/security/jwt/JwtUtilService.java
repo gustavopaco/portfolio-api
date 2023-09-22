@@ -46,7 +46,7 @@ public class JwtUtilService {
         Map<String, Object> map = new HashMap<>();
         String fullToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (Strings.isNullOrEmpty(fullToken)) {
+        if (!Strings.isNullOrEmpty(fullToken)) {
             String basicToken = getBasicToken(fullToken);
             if (!isTokenExpired(basicToken)) {
                 map.put("username", extractUsername(basicToken));
