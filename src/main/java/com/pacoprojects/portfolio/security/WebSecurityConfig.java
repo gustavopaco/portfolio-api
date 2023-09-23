@@ -1,11 +1,13 @@
 package com.pacoprojects.portfolio.security;
 
+import com.pacoprojects.portfolio.constants.Endpoints;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
 import com.pacoprojects.portfolio.security.jwt.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -48,6 +50,11 @@ public class WebSecurityConfig {
                                 antMatcher("/auth/**"),
                                 antMatcher("/contact/**")
                         ).permitAll()
+                        .requestMatchers(
+                                antMatcher(HttpMethod.POST, Endpoints.OWNER),
+                                antMatcher(HttpMethod.PUT, Endpoints.OWNER),
+                                antMatcher(HttpMethod.DELETE, Endpoints.OWNER)
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider());

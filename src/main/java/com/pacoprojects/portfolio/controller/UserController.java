@@ -22,9 +22,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("{id}/skill")
-    public ResponseEntity<List<SkillProjection>> listSkillsByUser(@PathVariable @NotNull Long id) {
-        return ResponseEntity.ok(userService.listSkillsByUser(id));
+    @GetMapping("owner/skill")
+    public ResponseEntity<List<SkillProjection>> listOwnerSkills() {
+        return ResponseEntity.ok(userService.listOwnerSkills());
     }
 
     @GetMapping("owner")
@@ -32,19 +32,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getOwnerData());
     }
 
-    @PostMapping("skill")
+    @PostMapping("owner/skill")
     public ResponseEntity<Void> createSkill(@RequestBody @Valid @NotNull SkillDto skillDto) {
         final String LOCATION = "/user/skill/";
         return ResponseEntity.created(URI.create(LOCATION + userService.createSkill(skillDto).id())).build();
     }
 
-    @PutMapping("skill")
+    @PutMapping("owner/skill")
     public ResponseEntity<Void> updateSkill(@RequestBody @Valid @NotNull SkillDto skillDto) {
         userService.updateSkill(skillDto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("skill/{id}")
+    @DeleteMapping("owner/skill/{id}")
     public ResponseEntity<Void> deleteSkill(@PathVariable @NotNull Long id) {
         userService.deleteSkill(id);
         return ResponseEntity.noContent().build();

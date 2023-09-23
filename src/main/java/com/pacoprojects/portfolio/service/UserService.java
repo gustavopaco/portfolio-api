@@ -23,10 +23,10 @@ public class UserService {
     private final SkillRepository skillRepository;
     private final SkillMapper skillMapper;
     @Value("${spring.mail.personal.username}")
-    private static String ownerUsername;
+    private String ownerUsername;
 
-    public List<SkillProjection> listSkillsByUser(@NotNull Long id) {
-        return userApplicationRepository.findById(id)
+    public List<SkillProjection> listOwnerSkills() {
+        return userApplicationRepository.findByUsername(ownerUsername)
                 .map(user -> skillRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
