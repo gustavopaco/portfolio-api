@@ -24,6 +24,8 @@ public interface UserApplicationProjectsSkillsProjection {
 
         String getDescription();
 
+        Integer getRating();
+
         String getUrl();
     }
 

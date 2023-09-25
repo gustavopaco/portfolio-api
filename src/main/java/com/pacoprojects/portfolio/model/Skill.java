@@ -29,6 +29,10 @@ public class Skill {
     @Column(name = "description", length = 100)
     private String description;
 
+    @Column(name = "rating", nullable = false)
+    @NotNull(message = "Rating is mandatory")
+    private Integer rating;
+
     @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "Url is mandatory")
     private String url;
