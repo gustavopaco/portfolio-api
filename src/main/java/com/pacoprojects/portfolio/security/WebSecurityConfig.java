@@ -53,7 +53,8 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 antMatcher(HttpMethod.POST, Endpoints.OWNER),
                                 antMatcher(HttpMethod.PUT, Endpoints.OWNER),
-                                antMatcher(HttpMethod.DELETE, Endpoints.OWNER)
+                                antMatcher(HttpMethod.DELETE, Endpoints.OWNER),
+                                antMatcher(Endpoints.CREDENTIALS)
                         ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
