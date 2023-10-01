@@ -75,11 +75,11 @@ public class JwtUtilService {
         return date.before(new Date());
     }
 
-    private String extractUsername(String basicToken) {
+    public String extractUsername(String basicToken) {
         return extractClaim(basicToken, Claims::getSubject);
     }
 
-    private String getBasicToken(String fullToken) {
+    public String getBasicToken(String fullToken) {
         return fullToken.replace(jwtConfig.getPrefix() + " ", "");
     }
 

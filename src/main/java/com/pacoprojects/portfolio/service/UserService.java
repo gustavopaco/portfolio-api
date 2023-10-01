@@ -6,8 +6,12 @@ import com.pacoprojects.portfolio.dto.SkillProjection;
 import com.pacoprojects.portfolio.dto.UserApplicationProjectsSkillsProjection;
 import com.pacoprojects.portfolio.exception.RecordNotFoundException;
 import com.pacoprojects.portfolio.mapper.SkillMapper;
+import com.pacoprojects.portfolio.model.Skill;
+import com.pacoprojects.portfolio.model.UserApplication;
 import com.pacoprojects.portfolio.repository.SkillRepository;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
+import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +26,7 @@ public class UserService {
     private final UserApplicationRepository userApplicationRepository;
     private final SkillRepository skillRepository;
     private final SkillMapper skillMapper;
+    private final JwtUtilService jwtUtilService;
     @Value("${spring.mail.personal.username}")
     private String ownerUsername;
 
@@ -36,13 +41,14 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public SkillDto createSkill(@NotNull SkillDto skillDto) {
-        validateUser(skillDto.userApplication().id());
-        return skillMapper.toDto(skillRepository.save(skillMapper.toEntity(skillDto)));
+    public SkillDto createSkill(@NotNull SkillDto skillDto, @NotBlank String token) {
+        Skill entity = skillMapper.toEntity(skillDto);
+        entity.setUserApplication(validateUser(token));
+        return skillMapper.toDto(skillRepository.save(entity));
     }
 
-    private void validateUser(@NotNull Long id) {
-        userApplicationRepository.findById(id)
+    private UserApplication validateUser(@NotNull String token) {
+        return userApplicationRepository.findByUsername(jwtUtilService.extractUsername(jwtUtilService.getBasicToken(token)))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 

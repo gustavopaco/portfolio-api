@@ -5,6 +5,7 @@ import com.pacoprojects.portfolio.dto.SkillProjection;
 import com.pacoprojects.portfolio.dto.UserApplicationProjectsSkillsProjection;
 import com.pacoprojects.portfolio.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,10 @@ public class UserController {
     }
 
     @PostMapping("owner/skill")
-    public ResponseEntity<Void> createSkill(@RequestBody @Valid @NotNull SkillDto skillDto) {
+    public ResponseEntity<Void> createSkill(@RequestBody @Valid @NotNull SkillDto skillDto,
+                                            @RequestHeader("Authorization") @NotBlank String token) {
         final String LOCATION = "/user/skill/";
-        return ResponseEntity.created(URI.create(LOCATION + userService.createSkill(skillDto).id())).build();
+        return ResponseEntity.created(URI.create(LOCATION + userService.createSkill(skillDto, token).id())).build();
     }
 
     @PutMapping("owner/skill")

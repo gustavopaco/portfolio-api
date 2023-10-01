@@ -85,7 +85,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
-        cors.setAllowedOrigins(List.of("http://localhost:4200"));
+        cors.setAllowedOrigins(List.of("http://localhost:4200", "https://localhost:4200"));
         cors.addAllowedMethod(CorsConfiguration.ALL);
         cors.addAllowedHeader(CorsConfiguration.ALL);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
