@@ -52,8 +52,8 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public void updateSkill(@NotNull SkillDto skillDto) {
-        skillRepository.findById(skillDto.id())
+    public void updateSkill(@NotNull Long id, @NotNull SkillDto skillDto) {
+        skillRepository.findById(id)
                 .ifPresentOrElse(skill -> skillRepository.save(skillMapper.partialUpdate(skillDto, skill)),
                         () -> {throw new RecordNotFoundException(Messages.SKILL_NOT_FOUND);}
                 );

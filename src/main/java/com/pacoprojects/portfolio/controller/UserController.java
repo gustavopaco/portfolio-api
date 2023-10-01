@@ -40,9 +40,10 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createSkill(skillDto, token).id())).build();
     }
 
-    @PutMapping("owner/skill")
-    public ResponseEntity<Void> updateSkill(@RequestBody @Valid @NotNull SkillDto skillDto) {
-        userService.updateSkill(skillDto);
+    @PutMapping("owner/skill/{id}")
+    public ResponseEntity<Void> updateSkill(@PathVariable @NotNull Long id,
+                                            @RequestBody @Valid @NotNull SkillDto skillDto) {
+        userService.updateSkill(id, skillDto);
         return ResponseEntity.noContent().build();
     }
 
