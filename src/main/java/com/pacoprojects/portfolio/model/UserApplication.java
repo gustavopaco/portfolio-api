@@ -20,7 +20,10 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user-application",
-        uniqueConstraints = {@UniqueConstraint(name = "unique_username", columnNames = "username")})
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_username", columnNames = "username"),
+                @UniqueConstraint(name = "unique_nickname", columnNames = "nickname")
+        })
 @Entity
 public class UserApplication implements UserDetails {
 
@@ -37,6 +40,10 @@ public class UserApplication implements UserDetails {
     @Column(name = "password", length = 100, nullable = false)
     @NotBlank(message = "Password is mandatory")
     private String password;
+
+    @Column(name = "nickname", length = 30, nullable = false)
+    @NotBlank(message = "Nickname is mandatory")
+    private String nickname;
 
     @Column(name = "role", length = 20, nullable = false)
     @Convert(converter = UserRoleApplicationConverter.class)
