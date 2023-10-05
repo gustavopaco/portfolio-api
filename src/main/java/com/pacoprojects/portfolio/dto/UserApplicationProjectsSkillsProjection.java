@@ -1,5 +1,7 @@
 package com.pacoprojects.portfolio.dto;
 
+import com.pacoprojects.portfolio.model.enums.ProjectStatus;
+
 import java.util.Set;
 
 /**
@@ -40,5 +42,11 @@ public interface UserApplicationProjectsSkillsProjection {
         String getDescription();
 
         String getUrl();
+
+        String getUrlPicture();
+
+        String getPictureOrientation();
+
+        ProjectStatus getProjectStatus();
     }
 }

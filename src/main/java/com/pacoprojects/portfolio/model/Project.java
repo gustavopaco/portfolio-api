@@ -1,7 +1,11 @@
 package com.pacoprojects.portfolio.model;
 
+import com.pacoprojects.portfolio.model.enums.ProjectStatus;
+import com.pacoprojects.portfolio.model.enums.converter.ProjectStatusConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -24,8 +28,9 @@ public class Project {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 20)
     @NotBlank(message = "Name is mandatory")
+    @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters")
     private String name;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
@@ -35,6 +40,19 @@ public class Project {
     @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "Url is mandatory")
     private String url;
+
+    @Column(name = "url_picture", nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "Url picture is mandatory")
+    private String urlPicture;
+
+    @Column(name = "picture_orientation", nullable = false, length = 20)
+    @NotBlank(message = "Picture orientation is mandatory")
+    private String pictureOrientation;
+
+    @Column(name = "project_status", length = 20, nullable = false)
+    @Convert(converter = ProjectStatusConverter.class)
+    @NotNull(message = "Project status is mandatory")
+    private ProjectStatus projectStatus;
 
     @ToString.Exclude
     @ManyToOne(optional = false)
