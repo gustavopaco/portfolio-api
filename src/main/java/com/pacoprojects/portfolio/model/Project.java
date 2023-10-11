@@ -15,10 +15,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "project",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "project_name_unique", columnNames = "name")
-        })
+@Table(name = "project")
 @Entity
 public class Project {
 
@@ -37,16 +34,14 @@ public class Project {
     @NotBlank(message = "Description is mandatory")
     private String description;
 
-    @Column(name = "url", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "url", columnDefinition = "TEXT")
     @NotBlank(message = "Url is mandatory")
     private String url;
 
-    @Column(name = "url_picture", nullable = false, columnDefinition = "TEXT")
-    @NotBlank(message = "Url picture is mandatory")
-    private String urlPicture;
+    @Column(name = "picture_url", columnDefinition = "TEXT")
+    private String pictureUrl;
 
-    @Column(name = "picture_orientation", nullable = false, length = 20)
-    @NotBlank(message = "Picture orientation is mandatory")
+    @Column(name = "picture_orientation", length = 20)
     private String pictureOrientation;
 
     @Column(name = "project_status", length = 20, nullable = false)

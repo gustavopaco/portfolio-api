@@ -12,5 +12,5 @@ public interface SkillProjection {
 
     Integer getRating();
 
-    String getUrl();
+    String getPictureUrl();
 }

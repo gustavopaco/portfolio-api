@@ -33,9 +33,9 @@ public class Skill {
     @NotNull(message = "Rating is mandatory")
     private Integer rating;
 
-    @Column(name = "url", nullable = false, columnDefinition = "TEXT")
-    @NotBlank(message = "Url is mandatory")
-    private String url;
+    @Column(name = "picture_url", nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "Picture url is mandatory")
+    private String pictureUrl;
 
     @ToString.Exclude
     @ManyToOne(optional = false)

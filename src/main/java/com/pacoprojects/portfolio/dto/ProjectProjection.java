@@ -16,7 +16,7 @@ public interface ProjectProjection {
 
     ProjectStatus getProjectStatus();
 
-    String getUrlPicture();
+    String getPictureUrl();
 
     String getPictureOrientation();
 }

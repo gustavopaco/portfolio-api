@@ -28,7 +28,7 @@ public interface UserApplicationProjectsSkillsProjection {
 
         Integer getRating();
 
-        String getUrl();
+        String getPictureUrl();
     }
 
     /**
@@ -43,7 +43,7 @@ public interface UserApplicationProjectsSkillsProjection {
 
         String getUrl();
 
-        String getUrlPicture();
+        String getPictureUrl();
 
         String getPictureOrientation();
 

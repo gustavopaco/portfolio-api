@@ -11,6 +11,6 @@ import java.io.Serializable;
 public record SkillDto(Long id,
                        @NotBlank(message = "Name is mandatory") String name,
                        String description,
-                       @NotBlank(message = "Url is mandatory") String url,
+                       @NotBlank(message = "Picture url is mandatory") String pictureUrl,
                        @NotNull(message = "Rating is mandatory")Integer rating) implements Serializable {
 }
