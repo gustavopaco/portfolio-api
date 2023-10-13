@@ -47,6 +47,6 @@ public interface UserApplicationProjectsSkillsProjection {
 
         String getPictureOrientation();
 
-        ProjectStatus getProjectStatus();
+        ProjectStatus getStatus();
     }
 }

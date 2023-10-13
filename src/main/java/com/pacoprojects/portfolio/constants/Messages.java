@@ -9,6 +9,8 @@ public class Messages {
     public static final String PROJECT_NOT_FOUND = "Project not found: ";
     public static final String SKILL_NOT_FOUND = "Skill not found";
 
+    /* Bad Request Messages*/
+    public static final String INVALID_REQUEST_BODY = "Request body is invalid: ";
     /*Jwt Token Messages*/
     public static final String TOKEN_EXPIRED = "Token expired";
     public static final String INVALID_TOKEN = "Invalid token";
@@ -19,4 +21,7 @@ public class Messages {
 
     /*Internal Messages*/
     public static final String INTERNAL_ERROR = "Unexpected error on server";
+    public static final String INTERNAL_DATA_INTEGRITY_ERROR = "Data integrity error: ";
+    public static final String INTERNAL_SQL_ERROR = "SQL error: ";
+    public static final String INTERNAL_CONSTRAINT_VIOLATION_ERROR = "Constraint violation error: ";
 }

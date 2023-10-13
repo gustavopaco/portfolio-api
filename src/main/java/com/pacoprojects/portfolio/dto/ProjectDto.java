@@ -14,7 +14,7 @@ public record ProjectDto(Long id,
                          @NotBlank(message = "Name is mandatory") @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters") String name,
                          @NotBlank(message = "Description is mandatory") String description,
                          String url,
-                         @NotNull(message = "Project status is mandatory") ProjectStatus projectStatus,
+                         @NotNull(message = "Project status is mandatory") ProjectStatus status,
                          String pictureUrl,
                          String pictureOrientation) implements Serializable {
 }

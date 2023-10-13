@@ -35,7 +35,6 @@ public class Project {
     private String description;
 
     @Column(name = "url", columnDefinition = "TEXT")
-    @NotBlank(message = "Url is mandatory")
     private String url;
 
     @Column(name = "picture_url", columnDefinition = "TEXT")
@@ -44,10 +43,10 @@ public class Project {
     @Column(name = "picture_orientation", length = 20)
     private String pictureOrientation;
 
-    @Column(name = "project_status", length = 20, nullable = false)
+    @Column(name = "status", length = 20, nullable = false)
     @Convert(converter = ProjectStatusConverter.class)
     @NotNull(message = "Project status is mandatory")
-    private ProjectStatus projectStatus;
+    private ProjectStatus status;
 
     @ToString.Exclude
     @ManyToOne(optional = false)
