@@ -32,6 +32,11 @@ public class UserController {
         return ResponseEntity.ok(userService.listOwnerProjects());
     }
 
+    @GetMapping("owner/project/{id}")
+    public ResponseEntity<ProjectProjection> findProjectById(@PathVariable @NotNull Long id) {
+        return ResponseEntity.ok(userService.findProjectById(id));
+    }
+
     @GetMapping("owner/project/status")
     public ResponseEntity<List<ProjectStatus>> listOwnerProjectsStatus() {
         return ResponseEntity.ok(userService.listOwnerProjectsStatus());

@@ -51,6 +51,11 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
+    public ProjectProjection findProjectById(@NotNull Long id) {
+        return projectRepository.findProjectById(id)
+                .orElseThrow(() -> new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id));
+    }
+
     public UserApplicationProjectsSkillsProjection getOwnerData() {
         return userApplicationRepository.findUserApplicationByUsername(ownerUsername)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
