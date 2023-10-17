@@ -50,9 +50,6 @@ public class UserApplication implements UserDetails {
     @NotNull(message = "Role is mandatory")
     private UserRoleApplication userRoleApplication;
 
-    @Column(name = "url_picture", columnDefinition = "TEXT")
-    private String urlPicture;
-
     @Column(name = "enabled", nullable = false)
     @JsonIgnore
     private boolean enabled;
@@ -71,6 +68,9 @@ public class UserApplication implements UserDetails {
     @OneToMany(targetEntity = Project.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Project> projects = new LinkedHashSet<>();
+
+    @OneToOne(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Bio bio;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -8,6 +8,7 @@ public class Messages {
     public static final String USER_ROLE_NOT_FOUND = "User role not found: ";
     public static final String PROJECT_NOT_FOUND = "Project not found: ";
     public static final String SKILL_NOT_FOUND = "Skill not found";
+    public static final String BIO_NOT_FOUND = "Bio not found";
 
     /* Bad Request Messages*/
     public static final String INVALID_REQUEST_BODY = "Request body is invalid: ";

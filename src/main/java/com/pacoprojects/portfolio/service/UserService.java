@@ -3,12 +3,15 @@ package com.pacoprojects.portfolio.service;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.*;
 import com.pacoprojects.portfolio.exception.RecordNotFoundException;
+import com.pacoprojects.portfolio.mapper.BioMapper;
 import com.pacoprojects.portfolio.mapper.ProjectMapper;
 import com.pacoprojects.portfolio.mapper.SkillMapper;
+import com.pacoprojects.portfolio.model.Bio;
 import com.pacoprojects.portfolio.model.Project;
 import com.pacoprojects.portfolio.model.Skill;
 import com.pacoprojects.portfolio.model.UserApplication;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
+import com.pacoprojects.portfolio.repository.BioRepository;
 import com.pacoprojects.portfolio.repository.ProjectRepository;
 import com.pacoprojects.portfolio.repository.SkillRepository;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
@@ -29,8 +32,10 @@ public class UserService {
     private final UserApplicationRepository userApplicationRepository;
     private final SkillRepository skillRepository;
     private final ProjectRepository projectRepository;
+    private final BioRepository bioRepository;
     private final SkillMapper skillMapper;
     private final ProjectMapper projectMapper;
+    private final BioMapper bioMapper;
     private final JwtUtilService jwtUtilService;
     @Value("${spring.mail.personal.username}")
     private String ownerUsername;
@@ -56,6 +61,11 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id));
     }
 
+    public BioProjection findBioByUsername(@NotBlank String token) {
+        return bioRepository.findBioByUserApplicationUsername(validateUser(token).getUsername())
+                .orElse(null);
+    }
+
     public UserApplicationProjectsSkillsProjection getOwnerData() {
         return userApplicationRepository.findUserApplicationByUsername(ownerUsername)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
@@ -71,6 +81,12 @@ public class UserService {
         Project entity = projectMapper.toEntity(projectDto);
         entity.setUserApplication(validateUser(token));
         return projectMapper.toDto(projectRepository.save(entity));
+    }
+
+    public BioDto createBio(@NotNull  BioDto bioDto, @NotBlank String token) {
+        Bio entity = bioMapper.toEntity(bioDto);
+        entity.setUserApplication(validateUser(token));
+        return bioMapper.toDto(bioRepository.save(entity));
     }
 
     private UserApplication validateUser(@NotNull String token) {
@@ -92,6 +108,13 @@ public class UserService {
                 );
     }
 
+    public void updateBio(@NotNull Long id, @NotNull BioDto bioDto) {
+        bioRepository.findById(id)
+                .ifPresentOrElse(bio -> bioRepository.save(bioMapper.partialUpdate(bioDto, bio)),
+                        () -> {throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);}
+                );
+    }
+
     public void deleteSkill(@NotNull Long id) {
         skillRepository.findById(id)
                 .ifPresentOrElse(skillRepository::delete, () -> {
@@ -103,6 +126,13 @@ public class UserService {
         projectRepository.findById(id)
                 .ifPresentOrElse(projectRepository::delete, () -> {
                     throw new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id);
+                });
+    }
+
+    public void deleteBio(@NotNull Long id) {
+        bioRepository.findById(id)
+                .ifPresentOrElse(bioRepository::delete, () -> {
+                    throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);
                 });
     }
 }

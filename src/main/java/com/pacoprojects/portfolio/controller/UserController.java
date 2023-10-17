@@ -37,6 +37,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findProjectById(id));
     }
 
+    @GetMapping("owner/bio")
+    public ResponseEntity<BioProjection> findBioByUsername(@RequestHeader("Authorization") @NotBlank String token) {
+        return ResponseEntity.ok(userService.findBioByUsername(token));
+    }
+
     @GetMapping("owner/project/status")
     public ResponseEntity<List<ProjectStatus>> listOwnerProjectsStatus() {
         return ResponseEntity.ok(userService.listOwnerProjectsStatus());
@@ -61,6 +66,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createProject(projectDto, token).id())).build();
     }
 
+    @PostMapping("owner/bio")
+    public ResponseEntity<Void> createBio(@RequestBody @Valid @NotNull BioDto bioDto,
+                                          @RequestHeader("Authorization") @NotBlank String token) {
+        final String LOCATION = "/user/bio/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createBio(bioDto, token).id())).build();
+    }
+
     @PutMapping("owner/skill/{id}")
     public ResponseEntity<Void> updateSkill(@PathVariable @NotNull Long id,
                                             @RequestBody @Valid @NotNull SkillDto skillDto) {
@@ -75,6 +87,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("owner/bio/{id}")
+    public ResponseEntity<Void> updateBio(@PathVariable @NotNull Long id,
+                                          @RequestBody @Valid @NotNull BioDto bioDto) {
+        userService.updateBio(id, bioDto);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("owner/skill/{id}")
     public ResponseEntity<Void> deleteSkill(@PathVariable @NotNull Long id) {
         userService.deleteSkill(id);
@@ -84,6 +103,12 @@ public class UserController {
     @DeleteMapping("owner/project/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable @NotNull Long id) {
         userService.deleteProject(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("owner/bio/{id}")
+    public ResponseEntity<Void> deleteBio(@PathVariable @NotNull Long id) {
+        userService.deleteBio(id);
         return ResponseEntity.noContent().build();
     }
 }
