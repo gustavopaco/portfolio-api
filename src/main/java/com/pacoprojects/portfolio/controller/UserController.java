@@ -22,91 +22,110 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("owner/skill")
-    public ResponseEntity<List<SkillProjection>> listOwnerSkills() {
-        return ResponseEntity.ok(userService.listOwnerSkills());
+    @GetMapping("skill")
+    public ResponseEntity<List<SkillProjection>> listSkillsByUserNickname(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.listSkillsByUserNickname(nickname));
     }
 
-    @GetMapping("owner/project")
-    public ResponseEntity<List<ProjectProjection>> listOwnerProjects() {
-        return ResponseEntity.ok(userService.listOwnerProjects());
+    @GetMapping("project")
+    public ResponseEntity<List<ProjectProjection>> listProjectsByUserNickname(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.listProjectsByUserNickname(nickname));
     }
 
-    @GetMapping("owner/project/{id}")
+    @GetMapping("project/{id}")
     public ResponseEntity<ProjectProjection> findProjectById(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(userService.findProjectById(id));
     }
 
-    @GetMapping("owner/bio")
+    @GetMapping("bio")
     public ResponseEntity<BioProjection> findBioByUsername(@RequestHeader("Authorization") @NotBlank String token) {
         return ResponseEntity.ok(userService.findBioByUsername(token));
     }
 
-    @GetMapping("owner/project/status")
-    public ResponseEntity<List<ProjectStatus>> listOwnerProjectsStatus() {
-        return ResponseEntity.ok(userService.listOwnerProjectsStatus());
+    @GetMapping("project/status")
+    public ResponseEntity<List<ProjectStatus>> listProjectsStatus() {
+        return ResponseEntity.ok(userService.listProjectsStatus());
     }
 
-    @GetMapping("owner")
-    public ResponseEntity<UserApplicationProjectsSkillsProjection> getOwnerData() {
-        return ResponseEntity.ok(userService.getOwnerData());
+    @GetMapping()
+    public ResponseEntity<UserApplicationProjection> getUserData(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.getUserData(nickname));
     }
 
-    @PostMapping("owner/skill")
+    @GetMapping("bio-social")
+    public ResponseEntity<UserApplicationBioSocialProjection> getUserDataBioSocial(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.getUserDataBioSocial(nickname));
+    }
+
+    @PostMapping("skill")
     public ResponseEntity<Void> createSkill(@RequestBody @Valid @NotNull SkillDto skillDto,
                                             @RequestHeader("Authorization") @NotBlank String token) {
         final String LOCATION = "/user/skill/";
         return ResponseEntity.created(URI.create(LOCATION + userService.createSkill(skillDto, token).id())).build();
     }
 
-    @PostMapping("owner/project")
+    @PostMapping("project")
     public ResponseEntity<Void> createProject(@RequestBody @Valid @NotNull ProjectDto projectDto,
                                               @RequestHeader("Authorization") @NotBlank String token) {
         final String LOCATION = "/user/project/";
         return ResponseEntity.created(URI.create(LOCATION + userService.createProject(projectDto, token).id())).build();
     }
 
-    @PostMapping("owner/bio")
+    @PostMapping("bio")
     public ResponseEntity<Void> createBio(@RequestBody @Valid @NotNull BioDto bioDto,
                                           @RequestHeader("Authorization") @NotBlank String token) {
         final String LOCATION = "/user/bio/";
         return ResponseEntity.created(URI.create(LOCATION + userService.createBio(bioDto, token).id())).build();
     }
 
-    @PutMapping("owner/skill/{id}")
+    @PostMapping("social")
+    public ResponseEntity<Void> createSocial(@RequestBody @Valid @NotNull SocialDto socialDto,
+                                             @RequestHeader("Authorization") @NotBlank String token) {
+        final String LOCATION = "/user/social/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createSocial(socialDto, token).id())).build();
+    }
+
+    @PutMapping("skill/{id}")
     public ResponseEntity<Void> updateSkill(@PathVariable @NotNull Long id,
                                             @RequestBody @Valid @NotNull SkillDto skillDto) {
         userService.updateSkill(id, skillDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("owner/project/{id}")
+    @PutMapping("project/{id}")
     public ResponseEntity<Void> updateProject(@PathVariable @NotNull Long id,
                                               @RequestBody @Valid @NotNull ProjectDto projectDto) {
         userService.updateProject(id, projectDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("owner/bio/{id}")
+    @PutMapping("bio/{id}")
     public ResponseEntity<Void> updateBio(@PathVariable @NotNull Long id,
                                           @RequestBody @Valid @NotNull BioDto bioDto) {
         userService.updateBio(id, bioDto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("owner/skill/{id}")
+    @PutMapping("social/{id}")
+    public ResponseEntity<Void> updateSocial(@PathVariable @NotNull Long id,
+                                             @RequestBody @Valid @NotNull SocialDto socialDto) {
+        userService.updateSocial(id, socialDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("skill/{id}")
     public ResponseEntity<Void> deleteSkill(@PathVariable @NotNull Long id) {
         userService.deleteSkill(id);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("owner/project/{id}")
+    @DeleteMapping("project/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable @NotNull Long id) {
         userService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("owner/bio/{id}")
+    @DeleteMapping("bio/{id}")
     public ResponseEntity<Void> deleteBio(@PathVariable @NotNull Long id) {
         userService.deleteBio(id);
         return ResponseEntity.noContent().build();

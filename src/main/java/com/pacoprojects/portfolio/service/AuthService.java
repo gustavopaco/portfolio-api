@@ -2,6 +2,7 @@ package com.pacoprojects.portfolio.service;
 
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.AuthRequest;
+import com.pacoprojects.portfolio.dto.AuthResponse;
 import com.pacoprojects.portfolio.model.TokenConfirmation;
 import com.pacoprojects.portfolio.model.UserApplication;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
@@ -33,7 +34,7 @@ public class AuthService {
     private final JwtConfig jwtConfig;
     private final AuthenticationManager authenticationManager;
 
-    public void authenticate(@NotNull AuthRequest authRequest, HttpServletResponse response) {
+    public AuthResponse authenticate(@NotNull AuthRequest authRequest, HttpServletResponse response) {
 
         try {
             Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
@@ -42,7 +43,7 @@ public class AuthService {
             saveNewToken(basicToken, user);
             String fullToken = getFullToken(basicToken);
             addHeaderResponse(response, fullToken);
-
+            return AuthResponse.builder().nickname(user.getNickname()).build();
         } catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Messages.INVALID_CREDENTIALS);
         } catch (LockedException exception) {

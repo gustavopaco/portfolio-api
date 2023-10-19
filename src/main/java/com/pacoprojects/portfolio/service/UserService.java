@@ -6,20 +6,14 @@ import com.pacoprojects.portfolio.exception.RecordNotFoundException;
 import com.pacoprojects.portfolio.mapper.BioMapper;
 import com.pacoprojects.portfolio.mapper.ProjectMapper;
 import com.pacoprojects.portfolio.mapper.SkillMapper;
-import com.pacoprojects.portfolio.model.Bio;
-import com.pacoprojects.portfolio.model.Project;
-import com.pacoprojects.portfolio.model.Skill;
-import com.pacoprojects.portfolio.model.UserApplication;
+import com.pacoprojects.portfolio.mapper.SocialMapper;
+import com.pacoprojects.portfolio.model.*;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
-import com.pacoprojects.portfolio.repository.BioRepository;
-import com.pacoprojects.portfolio.repository.ProjectRepository;
-import com.pacoprojects.portfolio.repository.SkillRepository;
-import com.pacoprojects.portfolio.repository.UserApplicationRepository;
+import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,25 +27,25 @@ public class UserService {
     private final SkillRepository skillRepository;
     private final ProjectRepository projectRepository;
     private final BioRepository bioRepository;
+    private final SocialRepository socialRepository;
     private final SkillMapper skillMapper;
     private final ProjectMapper projectMapper;
     private final BioMapper bioMapper;
+    private final SocialMapper socialMapper;
     private final JwtUtilService jwtUtilService;
-    @Value("${spring.mail.personal.username}")
-    private String ownerUsername;
 
-    public List<SkillProjection> listOwnerSkills() {
-        return userApplicationRepository.findByUsername(ownerUsername)
+    public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
+        return userApplicationRepository.findByNickname(nickname)
                 .map(user -> skillRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public List<ProjectStatus> listOwnerProjectsStatus() {
+    public List<ProjectStatus> listProjectsStatus() {
         return Stream.of(ProjectStatus.values()).toList();
     }
 
-    public List<ProjectProjection> listOwnerProjects() {
-        return userApplicationRepository.findByUsername(ownerUsername)
+    public List<ProjectProjection> listProjectsByUserNickname(@NotBlank String nickname) {
+        return userApplicationRepository.findByNickname(nickname)
                 .map(user -> projectRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
@@ -66,8 +60,13 @@ public class UserService {
                 .orElse(null);
     }
 
-    public UserApplicationProjectsSkillsProjection getOwnerData() {
-        return userApplicationRepository.findUserApplicationByUsername(ownerUsername)
+    public UserApplicationProjection getUserData(@NotBlank String nickname) {
+        return userApplicationRepository.findUserApplicationByNickname(nickname)
+                .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
+    }
+
+    public UserApplicationBioSocialProjection getUserDataBioSocial(@NotBlank String nickname) {
+        return userApplicationRepository.findUserApplicationBioSocialProjectionByNickname(nickname)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
@@ -87,6 +86,12 @@ public class UserService {
         Bio entity = bioMapper.toEntity(bioDto);
         entity.setUserApplication(validateUser(token));
         return bioMapper.toDto(bioRepository.save(entity));
+    }
+
+    public SocialDto createSocial(@NotNull SocialDto socialDto, @NotBlank String token) {
+        Social entity = socialMapper.toEntity(socialDto);
+        entity.setUserApplication(validateUser(token));
+        return socialMapper.toDto(socialRepository.save(entity));
     }
 
     private UserApplication validateUser(@NotNull String token) {
@@ -112,6 +117,13 @@ public class UserService {
         bioRepository.findById(id)
                 .ifPresentOrElse(bio -> bioRepository.save(bioMapper.partialUpdate(bioDto, bio)),
                         () -> {throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);}
+                );
+    }
+
+    public void updateSocial(@NotNull Long id, @NotNull SocialDto socialDto) {
+        socialRepository.findById(id)
+                .ifPresentOrElse(social -> socialRepository.save(socialMapper.toEntity(socialDto)),
+                        () -> {throw new RecordNotFoundException(Messages.SOCIAL_NOT_FOUND + id);}
                 );
     }
 

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Projection for {@link com.pacoprojects.portfolio.model.UserApplication}
  */
-public interface UserApplicationProjectsSkillsProjection {
+public interface UserApplicationProjection {
     Long getId();
 
     String getUrlPicture();

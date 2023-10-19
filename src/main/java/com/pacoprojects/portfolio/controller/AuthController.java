@@ -1,11 +1,13 @@
 package com.pacoprojects.portfolio.controller;
 
 import com.pacoprojects.portfolio.dto.AuthRequest;
+import com.pacoprojects.portfolio.dto.AuthResponse;
 import com.pacoprojects.portfolio.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping
-    public void authenticate(@RequestBody @NotNull @Valid AuthRequest authRequest, HttpServletResponse response) {
-        authService.authenticate(authRequest, response);
+    public ResponseEntity<AuthResponse> authenticate(@RequestBody @NotNull @Valid AuthRequest authRequest, HttpServletResponse response) {
+        return ResponseEntity.ok(authService.authenticate(authRequest, response));
     }
 }

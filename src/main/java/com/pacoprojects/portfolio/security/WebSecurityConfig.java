@@ -51,9 +51,9 @@ public class WebSecurityConfig {
                                 antMatcher("/contact/**")
                         ).permitAll()
                         .requestMatchers(
-                                antMatcher(HttpMethod.POST, Endpoints.OWNER),
-                                antMatcher(HttpMethod.PUT, Endpoints.OWNER),
-                                antMatcher(HttpMethod.DELETE, Endpoints.OWNER),
+                                antMatcher(HttpMethod.POST, Endpoints.USER),
+                                antMatcher(HttpMethod.PUT, Endpoints.USER),
+                                antMatcher(HttpMethod.DELETE, Endpoints.USER),
                                 antMatcher(Endpoints.CREDENTIALS)
                         ).hasRole("ADMIN")
                         .anyRequest().authenticated()

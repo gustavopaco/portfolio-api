@@ -72,6 +72,9 @@ public class UserApplication implements UserDetails {
     @OneToOne(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true)
     private Bio bio;
 
+    @OneToOne(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Social social;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + userRoleApplication.name());
