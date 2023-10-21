@@ -10,5 +10,5 @@ import java.io.Serializable;
 public record BioDto(Long id,
                      String avatarUrl,
                      @Size(message = "Presentation must be less than 500 characters", max = 500) String presentation,
-                     @Size(message = "Testimonial must be less than 500 characters", max = 500) String testimonial) implements Serializable {
+                     @Size(message = "Testimonial must be less than 1000 characters", max = 1000) String testimonial) implements Serializable {
 }

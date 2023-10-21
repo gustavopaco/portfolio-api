@@ -30,8 +30,8 @@ public class Bio {
     @Size(max = 500, message = "Presentation must be less than 500 characters")
     private String presentation;
 
-    @Column(name = "testimonial", columnDefinition = "TEXT", length = 500)
-    @Size(max = 500, message = "Testimonial must be less than 500 characters")
+    @Column(name = "testimonial", columnDefinition = "TEXT", length = 1000)
+    @Size(max = 1000, message = "Testimonial must be less than 1000 characters")
     private String testimonial;
 
     @ToString.Exclude

@@ -85,6 +85,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createSocial(socialDto, token).id())).build();
     }
 
+    @PostMapping("bio-social")
+    public ResponseEntity<Void> createBioSocial(@RequestBody @Valid @NotNull BioSocialDto bioSocialDto,
+                                                @RequestHeader("Authorization") @NotBlank String token) {
+        final String LOCATION = "/user/bio-social?nickname=";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createBioSocial(bioSocialDto, token).getNickname())).build();
+    }
+
     @PutMapping("skill/{id}")
     public ResponseEntity<Void> updateSkill(@PathVariable @NotNull Long id,
                                             @RequestBody @Valid @NotNull SkillDto skillDto) {

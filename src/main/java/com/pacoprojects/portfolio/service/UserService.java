@@ -82,7 +82,7 @@ public class UserService {
         return projectMapper.toDto(projectRepository.save(entity));
     }
 
-    public BioDto createBio(@NotNull  BioDto bioDto, @NotBlank String token) {
+    public BioDto createBio(@NotNull BioDto bioDto, @NotBlank String token) {
         Bio entity = bioMapper.toEntity(bioDto);
         entity.setUserApplication(validateUser(token));
         return bioMapper.toDto(bioRepository.save(entity));
@@ -106,7 +106,7 @@ public class UserService {
                 );
     }
 
-    public void updateProject(@NotNull Long id,@NotNull ProjectDto projectDto) {
+    public void updateProject(@NotNull Long id, @NotNull ProjectDto projectDto) {
         projectRepository.findById(projectDto.id())
                 .ifPresentOrElse(project -> projectRepository.save(projectMapper.partialUpdate(projectDto, project)),
                         () -> {throw new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id);}
@@ -122,7 +122,7 @@ public class UserService {
 
     public void updateSocial(@NotNull Long id, @NotNull SocialDto socialDto) {
         socialRepository.findById(id)
-                .ifPresentOrElse(social -> socialRepository.save(socialMapper.toEntity(socialDto)),
+                .ifPresentOrElse(social -> socialRepository.save(socialMapper.partialUpdate(socialDto, social)),
                         () -> {throw new RecordNotFoundException(Messages.SOCIAL_NOT_FOUND + id);}
                 );
     }
@@ -146,5 +146,28 @@ public class UserService {
                 .ifPresentOrElse(bioRepository::delete, () -> {
                     throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);
                 });
+    }
+
+    public UserApplication createBioSocial(BioSocialDto bioSocialDto, String token) {
+        if (bioSocialDto.bio().id() != null) {
+            updateBio(bioSocialDto.bio().id(), bioSocialDto.bio());
+        } else {
+            createBio(bioSocialDto.bio(), token);
+        }
+        if (bioSocialDto.social().id() != null) {
+            updateSocial(bioSocialDto.social().id(), bioSocialDto.social());
+        } else if (validateSocialValuesNotBlank(bioSocialDto.social())) {
+            createSocial(bioSocialDto.social(), token);
+        }
+        return validateUser(token);
+    }
+
+    private boolean validateSocialValuesNotBlank(SocialDto socialDto) {
+        return (socialDto.github() != null && !socialDto.github().isBlank()) ||
+                (socialDto.facebook() != null && !socialDto.facebook().isBlank()) ||
+                (socialDto.linkedin() != null && !socialDto.linkedin().isBlank()) ||
+                (socialDto.twitter() != null && !socialDto.twitter().isBlank()) ||
+                (socialDto.youtube() != null && !socialDto.youtube().isBlank()) ||
+                (socialDto.instagram() != null && !socialDto.instagram().isBlank());
     }
 }
