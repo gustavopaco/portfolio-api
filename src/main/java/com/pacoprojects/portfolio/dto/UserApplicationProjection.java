@@ -10,11 +10,13 @@ import java.util.Set;
 public interface UserApplicationProjection {
     Long getId();
 
-    String getUrlPicture();
-
     Set<SkillInfo> getSkills();
 
     Set<ProjectInfo> getProjects();
+
+    BioInfo getBio();
+
+    SocialInfo getSocial();
 
     /**
      * Projection for {@link com.pacoprojects.portfolio.model.Skill}
@@ -48,5 +50,35 @@ public interface UserApplicationProjection {
         String getPictureOrientation();
 
         ProjectStatus getStatus();
+    }
+
+    /**
+     * Projection for {@link com.pacoprojects.portfolio.model.Bio}
+     */
+    interface BioInfo {
+        Long getId();
+
+        String getAvatarUrl();
+
+        String getPresentation();
+
+        String getTestimonial();
+    }
+
+    /**
+     * Projection for {@link com.pacoprojects.portfolio.model.Social}
+     */
+    interface SocialInfo {
+        Long getId();
+
+        String getGithub();
+
+        String getLinkedin();
+
+        String getTwitter();
+
+        String getInstagram();
+
+        String getFacebook();
     }
 }

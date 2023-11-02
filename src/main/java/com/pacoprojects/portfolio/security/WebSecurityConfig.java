@@ -48,7 +48,8 @@ public class WebSecurityConfig {
                                 antMatcher("/error"),
                                 antMatcher("/health"),
                                 antMatcher("/auth/**"),
-                                antMatcher("/contact/**")
+                                antMatcher("/contact/**"),
+                                antMatcher(HttpMethod.GET, Endpoints.USER)
                         ).permitAll()
                         .requestMatchers(
                                 antMatcher(HttpMethod.POST, Endpoints.USER),
