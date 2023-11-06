@@ -11,4 +11,8 @@ public interface BioProjection {
     String getPresentation();
 
     String getTestimonial();
+
+    String getJobTitle();
+
+    String getFullName();
 }

@@ -26,8 +26,16 @@ public class Bio {
     @Column(name = "avatar_url", columnDefinition = "TEXT")
     private String avatarUrl;
 
-    @Column(name = "presentation", columnDefinition = "TEXT", length = 500)
-    @Size(max = 500, message = "Presentation must be less than 500 characters")
+    @Column(name = "full_name", length = 50)
+    @Size(max = 50, message = "Full name must be less than 50 characters")
+    private String fullName;
+
+    @Column(name = "job_title", length = 50)
+    @Size(max = 50, message = "Job title must be less than 50 characters")
+    private String jobTitle;
+
+    @Column(name = "presentation", columnDefinition = "TEXT", length = 250)
+    @Size(max = 250, message = "Presentation must be less than 250 characters")
     private String presentation;
 
     @Column(name = "testimonial", columnDefinition = "TEXT", length = 1000)

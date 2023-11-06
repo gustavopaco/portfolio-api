@@ -63,6 +63,10 @@ public interface UserApplicationProjection {
         String getPresentation();
 
         String getTestimonial();
+
+        String getJobTitle();
+
+        String getFullName();
     }
 
     /**

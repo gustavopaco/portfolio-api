@@ -19,6 +19,10 @@ public interface UserApplicationBioSocialProjection {
         String getPresentation();
 
         String getTestimonial();
+
+        String getJobTitle();
+
+        String getFullName();
     }
 
     /**
