@@ -75,6 +75,10 @@ public class UserApplication implements UserDetails {
     @OneToOne(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true)
     private Social social;
 
+    @OneToMany(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<Course> courses = new LinkedHashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + userRoleApplication.name());
