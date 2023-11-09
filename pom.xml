@@ -136,7 +136,7 @@
     <profile>
         <id>prod</id>
         <properties>
-            <spring.profiles.active>aws</spring.profiles.active>
+            <spring.profiles.active>prod</spring.profiles.active>
         </properties>
     </profile>
 </profiles>
