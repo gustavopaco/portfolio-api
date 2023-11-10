@@ -3,16 +3,14 @@ package com.pacoprojects.portfolio.service;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.*;
 import com.pacoprojects.portfolio.exception.RecordNotFoundException;
-import com.pacoprojects.portfolio.mapper.BioMapper;
-import com.pacoprojects.portfolio.mapper.ProjectMapper;
-import com.pacoprojects.portfolio.mapper.SkillMapper;
-import com.pacoprojects.portfolio.mapper.SocialMapper;
+import com.pacoprojects.portfolio.mapper.*;
 import com.pacoprojects.portfolio.model.*;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
 import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +30,9 @@ public class UserService {
     private final ProjectMapper projectMapper;
     private final BioMapper bioMapper;
     private final SocialMapper socialMapper;
+    private final CourseMapper courseMapper;
     private final JwtUtilService jwtUtilService;
+    private final CourseRepository courseRepository;
 
     public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
@@ -50,9 +50,20 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
+    public List<CourseProjection> listCoursesByUserNickname(String nickname) {
+        return userApplicationRepository.findByNickname(nickname)
+                .map(user -> courseRepository.findAllByUserApplicationId(user.getId()))
+                .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
+    }
+
     public ProjectProjection findProjectById(@NotNull Long id) {
         return projectRepository.findProjectById(id)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id));
+    }
+
+    public CourseProjection findCourseById(Long id) {
+        return courseRepository.findCourseById(id)
+                .orElseThrow(() -> new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id));
     }
 
     public BioProjection findBioByUsername(@NotBlank String token) {
@@ -94,6 +105,12 @@ public class UserService {
         return socialMapper.toDto(socialRepository.save(entity));
     }
 
+    public CourseDto createCourse(@NotNull CourseDto courseDto, @NotBlank String token) {
+        Course entity = courseMapper.toEntity(courseDto);
+        entity.setUserApplication(validateUser(token));
+        return courseMapper.toDto(courseRepository.save(entity));
+    }
+
     private UserApplication validateUser(@NotNull String token) {
         return userApplicationRepository.findByUsername(jwtUtilService.extractUsername(jwtUtilService.getBasicToken(token)))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
@@ -127,6 +144,13 @@ public class UserService {
                 );
     }
 
+    public void updateCourse(@NotNull Long id, @NotNull CourseDto courseDto) {
+        courseRepository.findById(id)
+                .ifPresentOrElse(course -> courseRepository.save(courseMapper.toEntity(courseDto)),
+                        () -> {throw new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id);}
+                );
+    }
+
     public void deleteSkill(@NotNull Long id) {
         skillRepository.findById(id)
                 .ifPresentOrElse(skillRepository::delete, () -> {
@@ -146,6 +170,13 @@ public class UserService {
                 .ifPresentOrElse(bioRepository::delete, () -> {
                     throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);
                 });
+    }
+
+    public void deleteCourse(Long id) {
+        courseRepository.findById(id)
+                .ifPresentOrElse(courseRepository::delete,
+                        () -> {throw new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id);}
+                );
     }
 
     public UserApplication createBioSocial(BioSocialDto bioSocialDto, String token) {

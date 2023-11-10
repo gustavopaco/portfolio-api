@@ -32,9 +32,19 @@ public class UserController {
         return ResponseEntity.ok(userService.listProjectsByUserNickname(nickname));
     }
 
+    @GetMapping("course")
+    public ResponseEntity<List<CourseProjection>> listCoursesByUserNickname(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.listCoursesByUserNickname(nickname));
+    }
+
     @GetMapping("project/{id}")
     public ResponseEntity<ProjectProjection> findProjectById(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(userService.findProjectById(id));
+    }
+
+    @GetMapping("course/{id}")
+    public ResponseEntity<CourseProjection> findCourseById(@PathVariable @NotNull Long id) {
+        return ResponseEntity.ok(userService.findCourseById(id));
     }
 
     @GetMapping("bio")
@@ -85,6 +95,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createSocial(socialDto, token).id())).build();
     }
 
+    @PostMapping("course")
+    public ResponseEntity<Void> createCourse(@RequestBody @Valid @NotNull CourseDto courseDto,
+                                             @RequestHeader("Authorization") @NotBlank String token) {
+        final String LOCATION = "/user/course/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createCourse(courseDto, token).id())).build();
+    }
+
     @PostMapping("bio-social")
     public ResponseEntity<Void> createBioSocial(@RequestBody @Valid @NotNull BioSocialDto bioSocialDto,
                                                 @RequestHeader("Authorization") @NotBlank String token) {
@@ -120,6 +137,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("course/{id}")
+    public ResponseEntity<Void> updateCourse(@PathVariable @NotNull Long id,
+                                             @RequestBody @Valid @NotNull CourseDto courseDto) {
+        userService.updateCourse(id, courseDto);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("skill/{id}")
     public ResponseEntity<Void> deleteSkill(@PathVariable @NotNull Long id) {
         userService.deleteSkill(id);
@@ -135,6 +159,12 @@ public class UserController {
     @DeleteMapping("bio/{id}")
     public ResponseEntity<Void> deleteBio(@PathVariable @NotNull Long id) {
         userService.deleteBio(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("course/{id}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable @NotNull Long id) {
+        userService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }
 }

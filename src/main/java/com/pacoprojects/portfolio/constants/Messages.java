@@ -10,6 +10,7 @@ public class Messages {
     public static final String SKILL_NOT_FOUND = "Skill not found";
     public static final String BIO_NOT_FOUND = "Bio not found";
     public static final String SOCIAL_NOT_FOUND = "Social not found";
+    public static final String COURSE_NOT_FOUND = "Course not found: ";
 
     /* Bad Request Messages*/
     public static final String INVALID_REQUEST_BODY = "Request body is invalid: ";
