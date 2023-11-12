@@ -10,11 +10,13 @@ import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -33,6 +35,7 @@ public class UserService {
     private final CourseMapper courseMapper;
     private final JwtUtilService jwtUtilService;
     private final CourseRepository courseRepository;
+    private final UserApplicationMapper userApplicationMapper;
 
     public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
@@ -71,9 +74,16 @@ public class UserService {
                 .orElse(null);
     }
 
-    public UserApplicationProjection getUserData(@NotBlank String nickname) {
-        return userApplicationRepository.findUserApplicationByNickname(nickname)
+    public UserApplicationDto getUserData(@NotBlank String nickname) {
+        UserApplication userApplication = userApplicationRepository.findUserApplicationByNickname(nickname)
+                .map(userApplicationMapper::toEntity)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
+
+        userApplication.setSkills(userApplication.getSkills().stream()
+                .sorted(Comparator.comparing(Skill::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new)));
+
+        return userApplicationMapper.toDto(userApplication);
     }
 
     public UserApplicationBioSocialProjection getUserDataBioSocial(@NotBlank String nickname) {

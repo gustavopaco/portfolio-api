@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserApplicationProjection> getUserData(@RequestParam @NotBlank String nickname) {
+    public ResponseEntity<UserApplicationDto> getUserData(@RequestParam @NotBlank String nickname) {
         return ResponseEntity.ok(userService.getUserData(nickname));
     }
 
