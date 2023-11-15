@@ -2,6 +2,8 @@ package com.pacoprojects.portfolio.dto;
 
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
 
+import java.util.Set;
+
 /**
  * Projection for {@link com.pacoprojects.portfolio.model.Project}
  */
@@ -19,4 +21,6 @@ public interface ProjectProjection {
     String getPictureUrl();
 
     String getPictureOrientation();
+
+    Set<String> getTags();
 }

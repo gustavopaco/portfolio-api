@@ -6,10 +6,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -47,6 +50,12 @@ public class Project {
     @Convert(converter = ProjectStatusConverter.class)
     @NotNull(message = "Project status is mandatory")
     private ProjectStatus status;
+
+    @Column(name = "tag")
+    @ElementCollection
+    @CollectionTable(name = "project_tags",
+            joinColumns = @JoinColumn(name = "project_id"))
+    private Set<String> tags = new LinkedHashSet<>();
 
     @ToString.Exclude
     @ManyToOne(optional = false)

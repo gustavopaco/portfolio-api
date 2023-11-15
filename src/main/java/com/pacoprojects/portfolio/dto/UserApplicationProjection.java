@@ -50,6 +50,8 @@ public interface UserApplicationProjection {
         String getPictureOrientation();
 
         ProjectStatus getStatus();
+
+        Set<String> getTags();
     }
 
     /**

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * DTO for {@link com.pacoprojects.portfolio.model.Project}
@@ -16,5 +17,6 @@ public record ProjectDto(Long id,
                          String url,
                          @NotNull(message = "Project status is mandatory") ProjectStatus status,
                          String pictureUrl,
-                         String pictureOrientation) implements Serializable {
+                         String pictureOrientation,
+                         Set<String> tags) implements Serializable {
 }
