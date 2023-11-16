@@ -52,10 +52,13 @@ public class Project {
     private ProjectStatus status;
 
     @Column(name = "tag")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "project_tags",
             joinColumns = @JoinColumn(name = "project_id"))
     private Set<String> tags = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ProjectSectionBlock> projectSectionBlocks = new LinkedHashSet<>();
 
     @ToString.Exclude
     @ManyToOne(optional = false)
@@ -63,6 +66,16 @@ public class Project {
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "user_application_id_fk", value = ConstraintMode.CONSTRAINT))
     private UserApplication userApplication;
+
+    public void addProjectSectionBlock(ProjectSectionBlock projectSectionBlock) {
+        projectSectionBlocks.add(projectSectionBlock);
+        projectSectionBlock.setProject(this);
+    }
+
+    public void removeProjectSectionBlock(ProjectSectionBlock projectSectionBlock) {
+        projectSectionBlocks.remove(projectSectionBlock);
+        projectSectionBlock.setProject(null);
+    }
 
     @Override
     public final boolean equals(Object o) {

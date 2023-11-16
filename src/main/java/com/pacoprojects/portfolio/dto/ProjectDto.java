@@ -18,5 +18,6 @@ public record ProjectDto(Long id,
                          @NotNull(message = "Project status is mandatory") ProjectStatus status,
                          String pictureUrl,
                          String pictureOrientation,
-                         Set<String> tags) implements Serializable {
+                         Set<String> tags,
+                         Set<ProjectSectionBlockDto> projectSectionBlocks) implements Serializable {
 }

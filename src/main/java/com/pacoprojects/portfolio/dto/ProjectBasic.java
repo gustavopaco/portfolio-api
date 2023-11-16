@@ -2,27 +2,17 @@ package com.pacoprojects.portfolio.dto;
 
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
 
-import java.util.Set;
-
 /**
  * Projection for {@link com.pacoprojects.portfolio.model.Project}
  */
-public interface ProjectProjection {
+public interface ProjectBasic {
     Long getId();
 
     String getName();
-
-    String getDescription();
-
-    String getUrl();
-
-    ProjectStatus getStatus();
 
     String getPictureUrl();
 
     String getPictureOrientation();
 
-    Set<String> getTags();
-
-    Set<ProjectSectionBlockInfo> getProjectSectionBlocks();
+    ProjectStatus getStatus();
 }

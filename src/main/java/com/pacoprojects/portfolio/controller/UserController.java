@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("project")
-    public ResponseEntity<List<ProjectProjection>> listProjectsByUserNickname(@RequestParam @NotBlank String nickname) {
+    public ResponseEntity<List<ProjectBasic>> listProjectsByUserNickname(@RequestParam @NotBlank String nickname) {
         return ResponseEntity.ok(userService.listProjectsByUserNickname(nickname));
     }
 

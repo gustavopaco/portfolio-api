@@ -47,7 +47,7 @@ public class UserService {
         return Stream.of(ProjectStatus.values()).toList();
     }
 
-    public List<ProjectProjection> listProjectsByUserNickname(@NotBlank String nickname) {
+    public List<ProjectBasic> listProjectsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
                 .map(user -> projectRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));

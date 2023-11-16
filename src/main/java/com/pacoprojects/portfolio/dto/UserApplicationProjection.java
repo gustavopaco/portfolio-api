@@ -1,7 +1,5 @@
 package com.pacoprojects.portfolio.dto;
 
-import com.pacoprojects.portfolio.model.enums.ProjectStatus;
-
 import java.util.Set;
 
 /**
@@ -12,7 +10,7 @@ public interface UserApplicationProjection {
 
     Set<SkillInfo> getSkills();
 
-    Set<ProjectInfo> getProjects();
+    Set<ProjectBasic> getProjects();
 
     BioInfo getBio();
 
@@ -31,27 +29,6 @@ public interface UserApplicationProjection {
         Integer getRating();
 
         String getPictureUrl();
-    }
-
-    /**
-     * Projection for {@link com.pacoprojects.portfolio.model.Project}
-     */
-    interface ProjectInfo {
-        Long getId();
-
-        String getName();
-
-        String getDescription();
-
-        String getUrl();
-
-        String getPictureUrl();
-
-        String getPictureOrientation();
-
-        ProjectStatus getStatus();
-
-        Set<String> getTags();
     }
 
     /**

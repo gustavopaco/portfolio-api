@@ -58,7 +58,7 @@ public class UserApplication implements UserDetails {
     @JsonIgnore
     private boolean locked;
 
-    @OneToMany(targetEntity = TokenConfirmation.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = TokenConfirmation.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<TokenConfirmation> tokenConfirmations = new LinkedHashSet<>();
 
     @OneToMany(targetEntity = Skill.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
