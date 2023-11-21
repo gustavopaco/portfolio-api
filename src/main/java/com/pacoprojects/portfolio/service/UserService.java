@@ -13,9 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -154,11 +152,16 @@ public class UserService {
                 );
     }
 
-    public void updateCourse(@NotNull Long id, @NotNull CourseDto courseDto) {
-        courseRepository.findById(id)
-                .ifPresentOrElse(course -> courseRepository.save(courseMapper.toEntity(courseDto)),
-                        () -> {throw new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id);}
-                );
+    public void saveCourses(@NotNull Set<CourseDto> coursesDtos, @NotBlank String token) {
+        UserApplication userApplication = validateUser(token);
+        Set<Course> courses = new HashSet<>();
+        coursesDtos.stream()
+                .map(courseMapper::toEntity)
+                .forEach(course -> {
+                    course.setUserApplication(userApplication);
+                    courses.add(course);
+                });
+        courseRepository.saveAll(courses);
     }
 
     public void deleteSkill(@NotNull Long id) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -137,10 +138,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("course/{id}")
-    public ResponseEntity<Void> updateCourse(@PathVariable @NotNull Long id,
-                                             @RequestBody @Valid @NotNull CourseDto courseDto) {
-        userService.updateCourse(id, courseDto);
+    @PutMapping("course")
+    public ResponseEntity<Void> saveCourses(@RequestBody @Valid @NotNull Set<CourseDto> coursesDtos,
+                                             @RequestHeader("Authorization") @NotBlank String token) {
+        userService.saveCourses(coursesDtos, token);
         return ResponseEntity.noContent().build();
     }
 
