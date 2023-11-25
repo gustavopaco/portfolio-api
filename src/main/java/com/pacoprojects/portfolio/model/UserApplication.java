@@ -59,6 +59,7 @@ public class UserApplication implements UserDetails {
     private boolean locked;
 
     @OneToMany(targetEntity = TokenConfirmation.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Set<TokenConfirmation> tokenConfirmations = new LinkedHashSet<>();
 
     @OneToMany(targetEntity = Skill.class, mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -78,6 +79,10 @@ public class UserApplication implements UserDetails {
     @OneToMany(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Course> courses = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<Certification> certifications = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
