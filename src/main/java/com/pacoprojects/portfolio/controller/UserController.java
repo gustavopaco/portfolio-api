@@ -38,6 +38,11 @@ public class UserController {
         return ResponseEntity.ok(userService.listCoursesByUserNickname(nickname));
     }
 
+    @GetMapping("certification")
+    public ResponseEntity<List<CertificationProjection>> listCertificationsByUserNickname(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.listCertificationsByUserNickname(nickname));
+    }
+
     @GetMapping("project/{id}")
     public ResponseEntity<ProjectProjection> findProjectById(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(userService.findProjectById(id));
@@ -110,6 +115,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createBioSocial(bioSocialDto, token).getNickname())).build();
     }
 
+    @PostMapping("certification")
+    public ResponseEntity<Void> createCertification(@RequestBody @Valid @NotNull CertificationDto certificationDto,
+                                                    @RequestHeader("Authorization") @NotBlank String token) {
+        final String LOCATION = "/user/certification/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createCertification(certificationDto, token).id())).build();
+    }
+
     @PutMapping("skill/{id}")
     public ResponseEntity<Void> updateSkill(@PathVariable @NotNull Long id,
                                             @RequestBody @Valid @NotNull SkillDto skillDto) {
@@ -166,6 +178,12 @@ public class UserController {
     @DeleteMapping("course/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable @NotNull Long id) {
         userService.deleteCourse(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("certification/{id}")
+    public ResponseEntity<Void> deleteCertification(@PathVariable @NotNull Long id) {
+        userService.deleteCertification(id);
         return ResponseEntity.noContent().build();
     }
 }

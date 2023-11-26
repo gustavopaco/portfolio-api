@@ -26,11 +26,13 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final BioRepository bioRepository;
     private final SocialRepository socialRepository;
+    private final CertificationRepository certificationRepository;
     private final SkillMapper skillMapper;
     private final ProjectMapper projectMapper;
     private final BioMapper bioMapper;
     private final SocialMapper socialMapper;
     private final CourseMapper courseMapper;
+    private final CertificationMapper certificationMapper;
     private final JwtUtilService jwtUtilService;
     private final CourseRepository courseRepository;
     private final UserApplicationMapper userApplicationMapper;
@@ -51,9 +53,15 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public List<CourseProjection> listCoursesByUserNickname(String nickname) {
+    public List<CourseProjection> listCoursesByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
                 .map(user -> courseRepository.findAllByUserApplicationId(user.getId()))
+                .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
+    }
+
+    public List<CertificationProjection> listCertificationsByUserNickname(@NotBlank String nickname) {
+        return userApplicationRepository.findByNickname(nickname)
+                .map(user -> certificationRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
@@ -62,7 +70,7 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id));
     }
 
-    public CourseProjection findCourseById(Long id) {
+    public CourseProjection findCourseById(@NotNull Long id) {
         return courseRepository.findCourseById(id)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id));
     }
@@ -117,6 +125,12 @@ public class UserService {
         Course entity = courseMapper.toEntity(courseDto);
         entity.setUserApplication(validateUser(token));
         return courseMapper.toDto(courseRepository.save(entity));
+    }
+
+    public CertificationDto createCertification(@NotNull CertificationDto certificationDto, @NotBlank String token) {
+        Certification entity = certificationMapper.toEntity(certificationDto);
+        entity.setUserApplication(validateUser(token));
+        return certificationMapper.toDto(certificationRepository.save(entity));
     }
 
     private UserApplication validateUser(@NotNull String token) {
@@ -185,10 +199,17 @@ public class UserService {
                 });
     }
 
-    public void deleteCourse(Long id) {
+    public void deleteCourse(@NotNull Long id) {
         courseRepository.findById(id)
                 .ifPresentOrElse(courseRepository::delete,
                         () -> {throw new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id);}
+                );
+    }
+
+    public void deleteCertification(@NotNull Long id) {
+        certificationRepository.findById(id)
+                .ifPresentOrElse(certificationRepository::delete,
+                        () -> {throw new RecordNotFoundException(Messages.CERTIFICATION_NOT_FOUND + id);}
                 );
     }
 
