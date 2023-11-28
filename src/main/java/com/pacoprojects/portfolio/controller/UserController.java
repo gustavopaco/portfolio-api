@@ -122,6 +122,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createCertification(certificationDto, token).id())).build();
     }
 
+    @PostMapping("curriculum")
+    public ResponseEntity<Void> createCurriculum(@RequestBody @Valid @NotNull CurriculumDto curriculumDto,
+                                                 @RequestHeader("Authorization") @NotBlank String token) {
+        final String LOCATION = "/user/curriculum/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createCurriculum(curriculumDto, token).id())).build();
+    }
+
     @PutMapping("skill/{id}")
     public ResponseEntity<Void> updateSkill(@PathVariable @NotNull Long id,
                                             @RequestBody @Valid @NotNull SkillDto skillDto) {

@@ -10,6 +10,7 @@ import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +28,14 @@ public class UserService {
     private final BioRepository bioRepository;
     private final SocialRepository socialRepository;
     private final CertificationRepository certificationRepository;
+    private final CurriculumRepository curriculumRepository;
     private final SkillMapper skillMapper;
     private final ProjectMapper projectMapper;
     private final BioMapper bioMapper;
     private final SocialMapper socialMapper;
     private final CourseMapper courseMapper;
     private final CertificationMapper certificationMapper;
+    private final CurriculumMapper curriculumMapper;
     private final JwtUtilService jwtUtilService;
     private final CourseRepository courseRepository;
     private final UserApplicationMapper userApplicationMapper;
@@ -131,6 +134,12 @@ public class UserService {
         Certification entity = certificationMapper.toEntity(certificationDto);
         entity.setUserApplication(validateUser(token));
         return certificationMapper.toDto(certificationRepository.save(entity));
+    }
+
+    public CurriculumDto createCurriculum(@NotNull CurriculumDto curriculumDto, @NotBlank String token) {
+        Curriculum curriculum = curriculumMapper.toEntity(curriculumDto);
+        curriculum.setUserApplication(validateUser(token));
+        return curriculumMapper.toDto(curriculumRepository.save(curriculum));
     }
 
     private UserApplication validateUser(@NotNull String token) {
