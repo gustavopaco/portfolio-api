@@ -193,4 +193,10 @@ public class UserController {
         userService.deleteCertification(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("curriculum/{id}")
+    public ResponseEntity<Void> deleteCurriculum(@PathVariable @NotNull Long id) {
+        userService.deleteCurriculum(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -222,6 +222,13 @@ public class UserService {
                 );
     }
 
+    public void deleteCurriculum(@NotNull Long id) {
+        curriculumRepository.findById(id)
+                .ifPresentOrElse(curriculumRepository::delete,
+                        () -> {throw new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND + id);}
+                );
+    }
+
     public UserApplication createBioSocial(BioSocialDto bioSocialDto, String token) {
         if (bioSocialDto.bio().id() != null) {
             updateBio(bioSocialDto.bio().id(), bioSocialDto.bio());
