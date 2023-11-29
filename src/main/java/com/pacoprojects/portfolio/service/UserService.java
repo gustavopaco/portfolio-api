@@ -100,6 +100,12 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
+    public CurriculumDto findCurriculumByUsername(@NotBlank String token) {
+        return curriculumRepository.findCurriculumByUserApplicationUsername(validateUser(token).getUsername())
+                .map(curriculumMapper::toDto)
+                .orElseThrow(() -> new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND));
+    }
+
     public SkillDto createSkill(@NotNull SkillDto skillDto, @NotBlank String token) {
         Skill entity = skillMapper.toEntity(skillDto);
         entity.setUserApplication(validateUser(token));
@@ -124,6 +130,20 @@ public class UserService {
         return socialMapper.toDto(socialRepository.save(entity));
     }
 
+    public UserApplication createBioSocial(BioSocialDto bioSocialDto, String token) {
+        if (bioSocialDto.bio().id() != null) {
+            updateBio(bioSocialDto.bio().id(), bioSocialDto.bio());
+        } else {
+            createBio(bioSocialDto.bio(), token);
+        }
+        if (bioSocialDto.social().id() != null) {
+            updateSocial(bioSocialDto.social().id(), bioSocialDto.social());
+        } else if (validateSocialValuesNotBlank(bioSocialDto.social())) {
+            createSocial(bioSocialDto.social(), token);
+        }
+        return validateUser(token);
+    }
+
     public CourseDto createCourse(@NotNull CourseDto courseDto, @NotBlank String token) {
         Course entity = courseMapper.toEntity(courseDto);
         entity.setUserApplication(validateUser(token));
@@ -140,11 +160,6 @@ public class UserService {
         Curriculum curriculum = curriculumMapper.toEntity(curriculumDto);
         curriculum.setUserApplication(validateUser(token));
         return curriculumMapper.toDto(curriculumRepository.save(curriculum));
-    }
-
-    private UserApplication validateUser(@NotNull String token) {
-        return userApplicationRepository.findByUsername(jwtUtilService.extractUsername(jwtUtilService.getBasicToken(token)))
-                .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
     public void updateSkill(@NotNull Long id, @NotNull SkillDto skillDto) {
@@ -229,18 +244,9 @@ public class UserService {
                 );
     }
 
-    public UserApplication createBioSocial(BioSocialDto bioSocialDto, String token) {
-        if (bioSocialDto.bio().id() != null) {
-            updateBio(bioSocialDto.bio().id(), bioSocialDto.bio());
-        } else {
-            createBio(bioSocialDto.bio(), token);
-        }
-        if (bioSocialDto.social().id() != null) {
-            updateSocial(bioSocialDto.social().id(), bioSocialDto.social());
-        } else if (validateSocialValuesNotBlank(bioSocialDto.social())) {
-            createSocial(bioSocialDto.social(), token);
-        }
-        return validateUser(token);
+    private UserApplication validateUser(@NotNull String token) {
+        return userApplicationRepository.findByUsername(jwtUtilService.extractUsername(jwtUtilService.getBasicToken(token)))
+                .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
     private boolean validateSocialValuesNotBlank(SocialDto socialDto) {

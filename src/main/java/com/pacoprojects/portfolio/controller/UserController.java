@@ -43,6 +43,11 @@ public class UserController {
         return ResponseEntity.ok(userService.listCertificationsByUserNickname(nickname));
     }
 
+    @GetMapping("project/status")
+    public ResponseEntity<List<ProjectStatus>> listProjectsStatus() {
+        return ResponseEntity.ok(userService.listProjectsStatus());
+    }
+
     @GetMapping("project/{id}")
     public ResponseEntity<ProjectProjection> findProjectById(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(userService.findProjectById(id));
@@ -58,9 +63,9 @@ public class UserController {
         return ResponseEntity.ok(userService.findBioByUsername(token));
     }
 
-    @GetMapping("project/status")
-    public ResponseEntity<List<ProjectStatus>> listProjectsStatus() {
-        return ResponseEntity.ok(userService.listProjectsStatus());
+    @GetMapping("curriculum")
+    public ResponseEntity<CurriculumDto> findCurriculumByUsername(@RequestHeader("Authorization") @NotBlank String token) {
+        return ResponseEntity.ok(userService.findCurriculumByUsername(token));
     }
 
     @GetMapping()
