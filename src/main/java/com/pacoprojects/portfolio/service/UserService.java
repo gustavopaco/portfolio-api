@@ -2,6 +2,7 @@ package com.pacoprojects.portfolio.service;
 
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.*;
+import com.pacoprojects.portfolio.dto.projection.UserApplicationBasicSearch;
 import com.pacoprojects.portfolio.exception.RecordNotFoundException;
 import com.pacoprojects.portfolio.mapper.*;
 import com.pacoprojects.portfolio.model.*;
@@ -10,7 +11,6 @@ import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +66,10 @@ public class UserService {
         return userApplicationRepository.findByNickname(nickname)
                 .map(user -> certificationRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
+    }
+
+    public List<UserApplicationBasicSearch> listUsersDataBasicSearch(@NotBlank String nickOrName) {
+        return userApplicationRepository.findAllByContainingNicknameOrFullName(nickOrName);
     }
 
     public ProjectProjection findProjectById(@NotNull Long id) {

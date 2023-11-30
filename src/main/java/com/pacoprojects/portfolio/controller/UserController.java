@@ -1,6 +1,7 @@
 package com.pacoprojects.portfolio.controller;
 
 import com.pacoprojects.portfolio.dto.*;
+import com.pacoprojects.portfolio.dto.projection.UserApplicationBasicSearch;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
 import com.pacoprojects.portfolio.service.UserService;
 import jakarta.validation.Valid;
@@ -46,6 +47,11 @@ public class UserController {
     @GetMapping("project/status")
     public ResponseEntity<List<ProjectStatus>> listProjectsStatus() {
         return ResponseEntity.ok(userService.listProjectsStatus());
+    }
+
+    @GetMapping("user")
+    public ResponseEntity<List<UserApplicationBasicSearch>> listUsersDataBasicSearch(@RequestParam @NotBlank String nickOrName) {
+        return ResponseEntity.ok(userService.listUsersDataBasicSearch(nickOrName));
     }
 
     @GetMapping("project/{id}")

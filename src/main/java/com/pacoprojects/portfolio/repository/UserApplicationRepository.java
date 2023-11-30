@@ -2,12 +2,15 @@ package com.pacoprojects.portfolio.repository;
 
 import com.pacoprojects.portfolio.dto.UserApplicationBioSocialProjection;
 import com.pacoprojects.portfolio.dto.UserApplicationProjection;
+import com.pacoprojects.portfolio.dto.projection.UserApplicationBasicSearch;
 import com.pacoprojects.portfolio.model.UserApplication;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,4 +31,12 @@ public interface UserApplicationRepository extends JpaRepository<UserApplication
     @Query("SELECT u FROM UserApplication u WHERE u.nickname = ?1")
     Optional<UserApplicationBioSocialProjection> findUserApplicationBioSocialProjectionByNickname(String nickname);
 
+    @Query(value = """
+            SELECT u.nickname as nickname,
+            b.fullName as fullName
+            FROM UserApplication u
+            JOIN Bio b ON u.bio.id = b.id
+            WHERE u.nickname ILIKE %?1% OR b.fullName ILIKE %?1%
+            """)
+    List<UserApplicationBasicSearch> findAllByContainingNicknameOrFullName(String nickOrName);
 }
