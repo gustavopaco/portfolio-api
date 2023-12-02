@@ -9,9 +9,11 @@ import com.pacoprojects.portfolio.model.*;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
 import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
+import com.pacoprojects.portfolio.util.RandomPasswordGenerator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,6 +41,7 @@ public class UserService {
     private final JwtUtilService jwtUtilService;
     private final CourseRepository courseRepository;
     private final UserApplicationMapper userApplicationMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
@@ -108,6 +111,13 @@ public class UserService {
         return curriculumRepository.findCurriculumByUserApplicationUsername(validateUser(token).getUsername())
                 .map(curriculumMapper::toDto)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND));
+    }
+
+    public UserApplication registerUser(@NotNull RegisterUserApplicationRequestDto registerUserApplicationRequestDto) {
+        UserApplication userApplication = userApplicationMapper.toEntity(registerUserApplicationRequestDto);
+        userApplication.setPassword(passwordEncoder.encode(RandomPasswordGenerator.generatePassword()));
+        // TODO: send email with password
+        return userApplicationRepository.save(userApplication);
     }
 
     public SkillDto createSkill(@NotNull SkillDto skillDto, @NotBlank String token) {

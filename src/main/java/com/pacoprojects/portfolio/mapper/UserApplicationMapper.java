@@ -1,5 +1,6 @@
 package com.pacoprojects.portfolio.mapper;
 
+import com.pacoprojects.portfolio.dto.RegisterUserApplicationRequestDto;
 import com.pacoprojects.portfolio.dto.UserApplicationDto;
 import com.pacoprojects.portfolio.dto.UserApplicationProjection;
 import com.pacoprojects.portfolio.model.Bio;
@@ -10,7 +11,10 @@ import org.mapstruct.*;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, uses = {SkillMapper.class, ProjectMapper.class, BioMapper.class, SocialMapper.class})
 public interface UserApplicationMapper {
     UserApplication toEntity(UserApplicationDto userApplicationDto);
+
     UserApplication toEntity(UserApplicationProjection userApplicationProjection);
+
+    UserApplication toEntity(RegisterUserApplicationRequestDto registerUserApplicationRequestDto);
 
     @AfterMapping
     default void linkSkills(@MappingTarget UserApplication userApplication) {

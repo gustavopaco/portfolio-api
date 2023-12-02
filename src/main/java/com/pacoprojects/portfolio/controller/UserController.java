@@ -84,6 +84,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserDataBioSocial(nickname));
     }
 
+    @PostMapping("register")
+    public ResponseEntity<Void> registerUser(@RequestBody @Valid @NotNull RegisterUserApplicationRequestDto registerUserApplicationRequestDto) {
+        final String LOCATION = "/user/register/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.registerUser(registerUserApplicationRequestDto).getId())).build();
+    }
+
     @PostMapping("skill")
     public ResponseEntity<Void> createSkill(@RequestBody @Valid @NotNull SkillDto skillDto,
                                             @RequestHeader("Authorization") @NotBlank String token) {
