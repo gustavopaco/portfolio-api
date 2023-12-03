@@ -29,4 +29,8 @@ public class Messages {
     public static final String INTERNAL_DATA_INTEGRITY_ERROR = "Data integrity error: ";
     public static final String INTERNAL_SQL_ERROR = "SQL error: ";
     public static final String INTERNAL_CONSTRAINT_VIOLATION_ERROR = "Constraint violation error: ";
+
+    /*Registration*/
+    public static final String THANK_YOU_FOR_REGISTERING = "Thank you for registering!";
+
 }

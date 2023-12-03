@@ -13,4 +13,14 @@ public class EmailMessage {
                 </div>
                 """.formatted(name, email, message);
     }
+
+    public static String buildRegistrationMessage(String email, String password) {
+        return """
+                <div>
+                        <h1>Thank you for registering!</h1>
+                        <p>Your email: %s</p>
+                        <p>Your temporary password: %s</p>
+                </div>
+                """.formatted(email, password);
+    }
 }

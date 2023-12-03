@@ -3,6 +3,9 @@ package com.pacoprojects.portfolio.service;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.*;
 import com.pacoprojects.portfolio.dto.projection.UserApplicationBasicSearch;
+import com.pacoprojects.portfolio.email.EmailMessage;
+import com.pacoprojects.portfolio.email.EmailObject;
+import com.pacoprojects.portfolio.email.EmailService;
 import com.pacoprojects.portfolio.exception.RecordNotFoundException;
 import com.pacoprojects.portfolio.mapper.*;
 import com.pacoprojects.portfolio.model.*;
@@ -42,6 +45,7 @@ public class UserService {
     private final CourseRepository courseRepository;
     private final UserApplicationMapper userApplicationMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
@@ -116,8 +120,13 @@ public class UserService {
     public UserApplication registerUser(@NotNull RegisterUserApplicationRequestDto registerUserApplicationRequestDto) {
         UserApplication userApplication = userApplicationMapper.toEntity(registerUserApplicationRequestDto);
         userApplication.setPassword(passwordEncoder.encode(RandomPasswordGenerator.generatePassword()));
-        // TODO: send email with password
-        return userApplicationRepository.save(userApplication);
+        userApplication = userApplicationRepository.save(userApplication);
+        emailService.sendMailWithAttachment(EmailObject.builder()
+                .recipient(userApplication.getUsername())
+                .subject(Messages.THANK_YOU_FOR_REGISTERING)
+                .message(EmailMessage.buildRegistrationMessage(userApplication.getUsername(), userApplication.getPassword()))
+                .build());
+        return userApplication;
     }
 
     public SkillDto createSkill(@NotNull SkillDto skillDto, @NotBlank String token) {
