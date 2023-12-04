@@ -1,8 +1,11 @@
 package com.pacoprojects.portfolio.service;
 
 import com.pacoprojects.portfolio.constants.Messages;
+import com.pacoprojects.portfolio.dto.AuthPasswordRecovery;
 import com.pacoprojects.portfolio.dto.AuthRequest;
 import com.pacoprojects.portfolio.dto.AuthResponse;
+import com.pacoprojects.portfolio.email.EmailObject;
+import com.pacoprojects.portfolio.email.EmailService;
 import com.pacoprojects.portfolio.model.TokenConfirmation;
 import com.pacoprojects.portfolio.model.UserApplication;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
@@ -33,6 +36,7 @@ public class AuthService {
     private final JwtUtilService jwtUtilService;
     private final JwtConfig jwtConfig;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     public AuthResponse authenticate(@NotNull AuthRequest authRequest, HttpServletResponse response) {
 
@@ -73,5 +77,22 @@ public class AuthService {
     private void addHeaderResponse(HttpServletResponse response, String fullToken) {
         response.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.AUTHORIZATION);
         response.addHeader(HttpHeaders.AUTHORIZATION, fullToken);
+    }
+
+    public void passwordRecovery(AuthPasswordRecovery recovery) {
+        userApplicationRepository.findByNickname(recovery.username())
+                .ifPresentOrElse(user -> {
+                    if (user.isEnabled()) {
+                        String token = generateToken(user);
+                        saveNewToken(token, user);
+                        emailService.sendMailWithAttachment(EmailObject.builder()
+                                        .recipient(user.getUsername())
+                                        .subject(Messages.PASSWORD_RECOVERY_TITLE)
+                                        .message(Messages.getRecoveryUrl(token))
+                                .build());
+                    } else {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Messages.USER_NOT_ACTIVE);
+                    }
+                }, () -> {throw new ResponseStatusException(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND);});
     }
 }

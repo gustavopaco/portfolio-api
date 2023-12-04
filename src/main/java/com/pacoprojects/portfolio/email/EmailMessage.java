@@ -23,4 +23,13 @@ public class EmailMessage {
                 </div>
                 """.formatted(email, password);
     }
+
+    public static String buildPasswordRecoveryMessage(String url) {
+        return """
+                <div>
+                        <h1>Click on the link below to recover your password</h1>
+                        <p>Link: %s</p>
+                </div>
+                """.formatted(url);
+    }
 }

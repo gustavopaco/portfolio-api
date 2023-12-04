@@ -1,5 +1,6 @@
 package com.pacoprojects.portfolio.controller;
 
+import com.pacoprojects.portfolio.dto.AuthPasswordRecovery;
 import com.pacoprojects.portfolio.dto.AuthRequest;
 import com.pacoprojects.portfolio.dto.AuthResponse;
 import com.pacoprojects.portfolio.service.AuthService;
@@ -25,5 +26,11 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<AuthResponse> authenticate(@RequestBody @NotNull @Valid AuthRequest authRequest, HttpServletResponse response) {
         return ResponseEntity.ok(authService.authenticate(authRequest, response));
+    }
+
+    @PostMapping("password-recovery")
+    public ResponseEntity<Void> passwordRecovery(@RequestBody @NotNull @Valid AuthPasswordRecovery recovery) {
+        authService.passwordRecovery(recovery);
+        return ResponseEntity.ok().build();
     }
 }

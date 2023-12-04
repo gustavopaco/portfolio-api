@@ -33,4 +33,10 @@ public class Messages {
     /*Registration*/
     public static final String THANK_YOU_FOR_REGISTERING = "Thank you for registering!";
 
+    /*URL Password Recovery*/
+    private static final String PASSWORD_RECOVERY_URL = "https://pacoprojects.com/password-recovery?token=";
+    public static final String PASSWORD_RECOVERY_TITLE = "Password Recovery";
+    public static String getRecoveryUrl(String token) {
+        return PASSWORD_RECOVERY_URL.concat(token);
+    }
 }
