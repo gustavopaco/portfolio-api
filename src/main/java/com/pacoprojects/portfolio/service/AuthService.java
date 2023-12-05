@@ -3,11 +3,13 @@ package com.pacoprojects.portfolio.service;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.AuthPasswordRecovery;
 import com.pacoprojects.portfolio.dto.AuthRequest;
+import com.pacoprojects.portfolio.dto.AuthResetPassword;
 import com.pacoprojects.portfolio.dto.AuthResponse;
 import com.pacoprojects.portfolio.email.EmailObject;
 import com.pacoprojects.portfolio.email.EmailService;
 import com.pacoprojects.portfolio.model.TokenConfirmation;
 import com.pacoprojects.portfolio.model.UserApplication;
+import com.pacoprojects.portfolio.repository.TokenConfirmationRepository;
 import com.pacoprojects.portfolio.repository.UserApplicationRepository;
 import com.pacoprojects.portfolio.security.jwt.JwtConfig;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
@@ -22,6 +24,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -33,10 +36,12 @@ import java.time.ZoneId;
 public class AuthService {
 
     private final UserApplicationRepository userApplicationRepository;
+    private final TokenConfirmationRepository tokenConfirmationRepository;
     private final JwtUtilService jwtUtilService;
     private final JwtConfig jwtConfig;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public AuthResponse authenticate(@NotNull AuthRequest authRequest, HttpServletResponse response) {
 
@@ -94,5 +99,20 @@ public class AuthService {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Messages.USER_NOT_ACTIVE);
                     }
                 }, () -> {throw new ResponseStatusException(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND);});
+    }
+
+    public void resetPassword(@NotNull AuthResetPassword resetPasswordDto) {
+        tokenConfirmationRepository.findByToken(resetPasswordDto.token())
+                .ifPresentOrElse(tokenConfirmation -> {
+                    if (tokenConfirmation.getExpiredAt().isBefore(LocalDateTime.now())) {
+                        UserApplication user = tokenConfirmation.getUserApplication();
+                        user.setPassword(bCryptPasswordEncoder.encode(resetPasswordDto.password()));
+                        userApplicationRepository.save(user);
+                        tokenConfirmation.setConfirmedAt(LocalDateTime.now());
+                        tokenConfirmationRepository.save(tokenConfirmation);
+                    } else {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Messages.TOKEN_EXPIRED);
+                    }
+                }, () -> {throw new ResponseStatusException(HttpStatus.NOT_FOUND, Messages.INVALID_TOKEN);});
     }
 }
