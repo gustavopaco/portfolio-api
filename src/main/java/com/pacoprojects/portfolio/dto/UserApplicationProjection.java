@@ -16,6 +16,8 @@ public interface UserApplicationProjection {
 
     SocialInfo getSocial();
 
+    Set<CourseProjection> getCourses();
+
     /**
      * Projection for {@link com.pacoprojects.portfolio.model.Skill}
      */

@@ -7,5 +7,5 @@ import java.util.Set;
  * DTO for {@link com.pacoprojects.portfolio.model.UserApplication}
  */
 public record UserApplicationDto(Long id, Set<SkillDto> skills, Set<ProjectDto> projects, BioDto bio,
-                                 SocialDto social) implements Serializable {
+                                 SocialDto social, Set<CourseDto> courses) implements Serializable {
 }

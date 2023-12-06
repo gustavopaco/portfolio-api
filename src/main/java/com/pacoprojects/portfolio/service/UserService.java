@@ -65,7 +65,7 @@ public class UserService {
 
     public List<CourseProjection> listCoursesByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
-                .map(user -> courseRepository.findAllByUserApplicationId(user.getId()))
+                .map(user -> courseRepository.findAllByUserApplicationIdOrderByEndDateDesc(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
@@ -101,6 +101,10 @@ public class UserService {
 
         userApplication.setSkills(userApplication.getSkills().stream()
                 .sorted(Comparator.comparing(Skill::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new)));
+
+        userApplication.setCourses(userApplication.getCourses().stream()
+                .sorted(Comparator.comparing(Course::getEndDate).reversed())
                 .collect(Collectors.toCollection(LinkedHashSet::new)));
 
         return userApplicationMapper.toDto(userApplication);

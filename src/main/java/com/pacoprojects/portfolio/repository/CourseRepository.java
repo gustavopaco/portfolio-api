@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-    List<CourseProjection> findAllByUserApplicationId(Long id);
+    List<CourseProjection> findAllByUserApplicationIdOrderByEndDateDesc(Long id);
 
     Optional<CourseProjection> findCourseById(Long id);
 }
