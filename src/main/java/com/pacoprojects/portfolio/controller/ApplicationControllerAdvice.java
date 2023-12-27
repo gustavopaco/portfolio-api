@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {ResponseStatusException.class})
     protected ResponseEntity<ExceptionObject> handleResponseStatusException(ResponseStatusException exception) {
+        LOG.error(Marker.ANY_MARKER, exception.getMessage(), exception);
         return new ResponseEntity<>(ExceptionObject
                 .builder()
                 .message(exception.getReason())

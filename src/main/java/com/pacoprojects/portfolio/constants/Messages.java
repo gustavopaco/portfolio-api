@@ -36,6 +36,16 @@ public class Messages {
     /*URL Password Recovery*/
     private static final String PASSWORD_RECOVERY_URL = "https://pacoprojects.com/password-recovery?token=";
     public static final String PASSWORD_RECOVERY_TITLE = "Password Recovery";
+
+    /*IoException - Failed to read the file*/
+    public static final String IO_EXCEPTION = "Failed to read the file: ";
+
+    /*AwsServiceException*/
+    public static final String AWS_SERVICE_EXCEPTION = "AWS Service Exception Failed to upload file to AWS S3: ";
+
+    /*SdkClientException*/
+    public static final String SDK_CLIENT_EXCEPTION = "SDK Client Exception Failed to upload file to AWS S3 ";
+
     public static String getRecoveryUrl(String token) {
         return PASSWORD_RECOVERY_URL.concat(token);
     }
