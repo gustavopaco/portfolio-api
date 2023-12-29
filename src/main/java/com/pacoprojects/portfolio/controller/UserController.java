@@ -1,7 +1,7 @@
 package com.pacoprojects.portfolio.controller;
 
 import com.pacoprojects.portfolio.dto.*;
-import com.pacoprojects.portfolio.dto.projection.UserApplicationBasicSearch;
+import com.pacoprojects.portfolio.projection.*;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
 import com.pacoprojects.portfolio.service.UserService;
 import jakarta.validation.Valid;
@@ -39,9 +39,9 @@ public class UserController {
         return ResponseEntity.ok(userService.listCoursesByUserNickname(nickname));
     }
 
-    @GetMapping("certification")
-    public ResponseEntity<List<CertificationProjection>> listCertificationsByUserNickname(@RequestParam @NotBlank String nickname) {
-        return ResponseEntity.ok(userService.listCertificationsByUserNickname(nickname));
+    @GetMapping("certificate")
+    public ResponseEntity<List<CertificateProjection>> listCertificatesByUserNickname(@RequestParam @NotBlank String nickname) {
+        return ResponseEntity.ok(userService.listCertificatesByUserNickname(nickname));
     }
 
     @GetMapping("project/status")
@@ -132,11 +132,11 @@ public class UserController {
         return ResponseEntity.created(URI.create(LOCATION + userService.createBioSocial(bioSocialDto, token).getNickname())).build();
     }
 
-    @PostMapping("certification")
-    public ResponseEntity<Void> createCertification(@RequestBody @Valid @NotNull CertificationDto certificationDto,
+    @PostMapping("certificate")
+    public ResponseEntity<Void> createCertificates(@RequestBody @Valid @NotNull Set<CertificateDto> certificateDtoSet,
                                                     @RequestHeader("Authorization") @NotBlank String token) {
-        final String LOCATION = "/user/certification/";
-        return ResponseEntity.created(URI.create(LOCATION + userService.createCertification(certificationDto, token).id())).build();
+        userService.createCertificates(certificateDtoSet, token);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("curriculum")
@@ -205,9 +205,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("certification/{id}")
-    public ResponseEntity<Void> deleteCertification(@PathVariable @NotNull Long id) {
-        userService.deleteCertification(id);
+    @DeleteMapping("certificate/{id}")
+    public ResponseEntity<Void> deleteCertificate(@PathVariable @NotNull Long id) {
+        userService.deleteCertificate(id);
         return ResponseEntity.noContent().build();
     }
 

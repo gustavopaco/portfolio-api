@@ -1,6 +1,6 @@
 package com.pacoprojects.portfolio.repository;
 
-import com.pacoprojects.portfolio.dto.BioProjection;
+import com.pacoprojects.portfolio.projection.BioProjection;
 import com.pacoprojects.portfolio.model.Bio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

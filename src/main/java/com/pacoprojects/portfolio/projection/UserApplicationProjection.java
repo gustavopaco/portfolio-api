@@ -1,4 +1,4 @@
-package com.pacoprojects.portfolio.dto;
+package com.pacoprojects.portfolio.projection;
 
 import java.util.Set;
 

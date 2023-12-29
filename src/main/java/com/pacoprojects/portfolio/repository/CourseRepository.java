@@ -1,6 +1,6 @@
 package com.pacoprojects.portfolio.repository;
 
-import com.pacoprojects.portfolio.dto.CourseProjection;
+import com.pacoprojects.portfolio.projection.CourseProjection;
 import com.pacoprojects.portfolio.model.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

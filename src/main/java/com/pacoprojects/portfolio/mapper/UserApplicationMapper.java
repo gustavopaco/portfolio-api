@@ -2,7 +2,7 @@ package com.pacoprojects.portfolio.mapper;
 
 import com.pacoprojects.portfolio.dto.RegisterUserApplicationRequestDto;
 import com.pacoprojects.portfolio.dto.UserApplicationDto;
-import com.pacoprojects.portfolio.dto.UserApplicationProjection;
+import com.pacoprojects.portfolio.projection.UserApplicationProjection;
 import com.pacoprojects.portfolio.model.Bio;
 import com.pacoprojects.portfolio.model.Social;
 import com.pacoprojects.portfolio.model.UserApplication;

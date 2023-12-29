@@ -80,9 +80,9 @@ public class UserApplication implements UserDetails {
     @ToString.Exclude
     private Set<Course> courses = new LinkedHashSet<>();
 
-//    @OneToMany(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @ToString.Exclude
-//    private Set<Certification> certifications = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<Certificate> certificates = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

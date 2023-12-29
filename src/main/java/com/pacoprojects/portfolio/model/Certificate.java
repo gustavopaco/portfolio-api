@@ -10,13 +10,13 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "certification")
+@Table(name = "certificate")
 @Entity
-public class Certification {
+public class Certificate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "certification_gen")
-    @SequenceGenerator(name = "certification_gen", sequenceName = "certification_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "certificate_gen")
+    @SequenceGenerator(name = "certificate_gen", sequenceName = "certificate_seq", allocationSize = 1)
     @Column(name = "id", updatable = false)
     private Long id;
 
@@ -27,7 +27,7 @@ public class Certification {
     @ManyToOne(targetEntity = UserApplication.class, optional = false)
     @JoinColumn(name = "user_application_id", nullable = false,
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "fk_certification_user_application_id", value = ConstraintMode.CONSTRAINT))
+            foreignKey = @ForeignKey(name = "fk_certificate_user_application_id", value = ConstraintMode.CONSTRAINT))
     private UserApplication userApplication;
 
     @Override
@@ -37,7 +37,7 @@ public class Certification {
         Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Certification that = (Certification) o;
+        Certificate that = (Certificate) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

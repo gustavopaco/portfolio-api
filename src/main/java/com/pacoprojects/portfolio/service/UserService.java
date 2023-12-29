@@ -2,7 +2,6 @@ package com.pacoprojects.portfolio.service;
 
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.*;
-import com.pacoprojects.portfolio.dto.projection.UserApplicationBasicSearch;
 import com.pacoprojects.portfolio.email.EmailMessage;
 import com.pacoprojects.portfolio.email.EmailObject;
 import com.pacoprojects.portfolio.email.EmailService;
@@ -10,6 +9,7 @@ import com.pacoprojects.portfolio.exception.RecordNotFoundException;
 import com.pacoprojects.portfolio.mapper.*;
 import com.pacoprojects.portfolio.model.*;
 import com.pacoprojects.portfolio.model.enums.ProjectStatus;
+import com.pacoprojects.portfolio.projection.*;
 import com.pacoprojects.portfolio.repository.*;
 import com.pacoprojects.portfolio.security.jwt.JwtUtilService;
 import com.pacoprojects.portfolio.util.RandomPasswordGenerator;
@@ -32,14 +32,14 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final BioRepository bioRepository;
     private final SocialRepository socialRepository;
-    private final CertificationRepository certificationRepository;
+    private final CertificateRepository certificateRepository;
     private final CurriculumRepository curriculumRepository;
     private final SkillMapper skillMapper;
     private final ProjectMapper projectMapper;
     private final BioMapper bioMapper;
     private final SocialMapper socialMapper;
     private final CourseMapper courseMapper;
-    private final CertificationMapper certificationMapper;
+    private final CertificateMapper certificateMapper;
     private final CurriculumMapper curriculumMapper;
     private final JwtUtilService jwtUtilService;
     private final CourseRepository courseRepository;
@@ -69,9 +69,9 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public List<CertificationProjection> listCertificationsByUserNickname(@NotBlank String nickname) {
+    public List<CertificateProjection> listCertificatesByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
-                .map(user -> certificationRepository.findAllByUserApplicationId(user.getId()))
+                .map(user -> certificateRepository.findAllByUserApplicationId(user.getId()))
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
@@ -177,10 +177,16 @@ public class UserService {
         return courseMapper.toDto(courseRepository.save(entity));
     }
 
-    public CertificationDto createCertification(@NotNull CertificationDto certificationDto, @NotBlank String token) {
-        Certification entity = certificationMapper.toEntity(certificationDto);
-        entity.setUserApplication(validateUser(token));
-        return certificationMapper.toDto(certificationRepository.save(entity));
+    public void createCertificates(@NotNull Set<CertificateDto> certificateDtoSet, @NotBlank String token) {
+        UserApplication userApplication = validateUser(token);
+        Set<Certificate> certificates = new HashSet<>();
+        certificateDtoSet.stream()
+                .map(certificateMapper::toEntity)
+                .forEach(certificate -> {
+                    certificate.setUserApplication(userApplication);
+                    certificates.add(certificate);
+                });
+        certificateRepository.saveAll(certificates);
     }
 
     public CurriculumDto createCurriculum(@NotNull CurriculumDto curriculumDto, @NotBlank String token) {
@@ -257,10 +263,10 @@ public class UserService {
                 );
     }
 
-    public void deleteCertification(@NotNull Long id) {
-        certificationRepository.findById(id)
-                .ifPresentOrElse(certificationRepository::delete,
-                        () -> {throw new RecordNotFoundException(Messages.CERTIFICATION_NOT_FOUND + id);}
+    public void deleteCertificate(@NotNull Long id) {
+        certificateRepository.findById(id)
+                .ifPresentOrElse(certificateRepository::delete,
+                        () -> {throw new RecordNotFoundException(Messages.CERTIFICATE_NOT_FOUND + id);}
                 );
     }
 

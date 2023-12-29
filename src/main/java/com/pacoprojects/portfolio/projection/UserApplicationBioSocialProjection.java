@@ -1,4 +1,4 @@
-package com.pacoprojects.portfolio.dto;
+package com.pacoprojects.portfolio.projection;
 
 /**
  * Projection for {@link com.pacoprojects.portfolio.model.UserApplication}
