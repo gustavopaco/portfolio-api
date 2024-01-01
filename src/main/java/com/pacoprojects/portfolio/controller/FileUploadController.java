@@ -14,12 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileUploadController {
 
-    private final FileUploadService fileUploadService;
+    private final FileUploadService awsS3Service;
 
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestPart @NotNull MultipartFile file,
                                          @RequestParam String folder) {
-        String objectUrl = fileUploadService.upload(file, folder);
+        String objectUrl = awsS3Service.upload(file, folder);
         return ResponseEntity.ok(objectUrl);
     }
 

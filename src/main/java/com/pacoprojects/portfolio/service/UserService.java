@@ -46,6 +46,7 @@ public class UserService {
     private final UserApplicationMapper userApplicationMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final FileUploadService awsFileUploadService;
 
     public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
@@ -198,28 +199,36 @@ public class UserService {
     public void updateSkill(@NotNull Long id, @NotNull SkillDto skillDto) {
         skillRepository.findById(id)
                 .ifPresentOrElse(skill -> skillRepository.save(skillMapper.partialUpdate(skillDto, skill)),
-                        () -> {throw new RecordNotFoundException(Messages.SKILL_NOT_FOUND);}
+                        () -> {
+                            throw new RecordNotFoundException(Messages.SKILL_NOT_FOUND);
+                        }
                 );
     }
 
     public void updateProject(@NotNull Long id, @NotNull ProjectDto projectDto) {
         projectRepository.findById(projectDto.id())
                 .ifPresentOrElse(project -> projectRepository.save(projectMapper.partialUpdate(projectDto, project)),
-                        () -> {throw new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id);}
+                        () -> {
+                            throw new RecordNotFoundException(Messages.PROJECT_NOT_FOUND + id);
+                        }
                 );
     }
 
     public void updateBio(@NotNull Long id, @NotNull BioDto bioDto) {
         bioRepository.findById(id)
                 .ifPresentOrElse(bio -> bioRepository.save(bioMapper.partialUpdate(bioDto, bio)),
-                        () -> {throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);}
+                        () -> {
+                            throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);
+                        }
                 );
     }
 
     public void updateSocial(@NotNull Long id, @NotNull SocialDto socialDto) {
         socialRepository.findById(id)
                 .ifPresentOrElse(social -> socialRepository.save(socialMapper.partialUpdate(socialDto, social)),
-                        () -> {throw new RecordNotFoundException(Messages.SOCIAL_NOT_FOUND + id);}
+                        () -> {
+                            throw new RecordNotFoundException(Messages.SOCIAL_NOT_FOUND + id);
+                        }
                 );
     }
 
@@ -259,21 +268,30 @@ public class UserService {
     public void deleteCourse(@NotNull Long id) {
         courseRepository.findById(id)
                 .ifPresentOrElse(courseRepository::delete,
-                        () -> {throw new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id);}
+                        () -> {
+                            throw new RecordNotFoundException(Messages.COURSE_NOT_FOUND + id);
+                        }
                 );
     }
 
     public void deleteCertificate(@NotNull Long id) {
         certificateRepository.findById(id)
-                .ifPresentOrElse(certificateRepository::delete,
-                        () -> {throw new RecordNotFoundException(Messages.CERTIFICATE_NOT_FOUND + id);}
+                .ifPresentOrElse(certificate -> {
+                            awsFileUploadService.delete(certificate.getUrl());
+                            certificateRepository.delete(certificate);
+                        },
+                        () -> {
+                            throw new RecordNotFoundException(Messages.CERTIFICATE_NOT_FOUND + id);
+                        }
                 );
     }
 
     public void deleteCurriculum(@NotNull Long id) {
         curriculumRepository.findById(id)
                 .ifPresentOrElse(curriculumRepository::delete,
-                        () -> {throw new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND + id);}
+                        () -> {
+                            throw new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND + id);
+                        }
                 );
     }
 
