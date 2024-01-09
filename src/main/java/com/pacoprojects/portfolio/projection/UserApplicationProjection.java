@@ -18,6 +18,8 @@ public interface UserApplicationProjection {
 
     Set<CourseProjection> getCourses();
 
+    Set<CertificateProjection> getCertificates();
+
     /**
      * Projection for {@link com.pacoprojects.portfolio.model.Skill}
      */

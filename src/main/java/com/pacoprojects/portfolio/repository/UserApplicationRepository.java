@@ -23,7 +23,7 @@ public interface UserApplicationRepository extends JpaRepository<UserApplication
 
     Optional<UserApplicationProjection> findUserApplicationByUsername(String username);
 
-    @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social", "skills", "projects", "courses"})
+    @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social", "skills", "projects", "courses", "certificates"})
     Optional<UserApplicationProjection> findUserApplicationByNickname(String nickname);
 
     @EntityGraph(attributePaths = {"bio", "social"})
