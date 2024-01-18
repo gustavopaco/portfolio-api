@@ -11,13 +11,13 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "curriculum")
+@Table(name = "resume")
 @Entity
-public class Curriculum {
+public class Resume {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "curriculum_gen")
-    @SequenceGenerator(name = "curriculum_gen", sequenceName = "curriculum_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resume_gen")
+    @SequenceGenerator(name = "resume_gen", sequenceName = "resume_seq", allocationSize = 1)
     @Column(name = "id", updatable = false)
     private Long id;
 
@@ -32,7 +32,7 @@ public class Curriculum {
     @OneToOne(targetEntity = UserApplication.class, optional = false, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_application_id", nullable = false,
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "fk_curriculum_user_application", value = ConstraintMode.CONSTRAINT))
+            foreignKey = @ForeignKey(name = "fk_resume_user_application", value = ConstraintMode.CONSTRAINT))
     private UserApplication userApplication;
 
     @Override
@@ -42,7 +42,7 @@ public class Curriculum {
         Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Curriculum that = (Curriculum) o;
+        Resume that = (Resume) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

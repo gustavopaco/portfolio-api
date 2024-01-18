@@ -69,9 +69,9 @@ public class UserController {
         return ResponseEntity.ok(userService.findBioByUsername(token));
     }
 
-    @GetMapping("curriculum")
-    public ResponseEntity<CurriculumDto> findCurriculumByUsername(@RequestHeader("Authorization") @NotBlank String token) {
-        return ResponseEntity.ok(userService.findCurriculumByUsername(token));
+    @GetMapping("resume")
+    public ResponseEntity<ResumeDto> findResumeByUsername(@RequestHeader("Authorization") @NotBlank String token) {
+        return ResponseEntity.ok(userService.findResumeByUsername(token));
     }
 
     @GetMapping()
@@ -139,11 +139,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("curriculum")
-    public ResponseEntity<Void> createCurriculum(@RequestBody @Valid @NotNull CurriculumDto curriculumDto,
+    @PostMapping("resume")
+    public ResponseEntity<Void> createResume(@RequestBody @Valid @NotNull ResumeDto resumeDto,
                                                  @RequestHeader("Authorization") @NotBlank String token) {
-        final String LOCATION = "/user/curriculum/";
-        return ResponseEntity.created(URI.create(LOCATION + userService.createCurriculum(curriculumDto, token).id())).build();
+        final String LOCATION = "/user/resume/";
+        return ResponseEntity.created(URI.create(LOCATION + userService.createResume(resumeDto, token).id())).build();
     }
 
     @PutMapping("skill/{id}")
@@ -211,9 +211,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("curriculum/{id}")
-    public ResponseEntity<Void> deleteCurriculum(@PathVariable @NotNull Long id) {
-        userService.deleteCurriculum(id);
+    @DeleteMapping("resume/{id}")
+    public ResponseEntity<Void> deleteResume(@PathVariable @NotNull Long id) {
+        userService.deleteResume(id);
         return ResponseEntity.noContent().build();
     }
 }

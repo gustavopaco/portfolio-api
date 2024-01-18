@@ -12,7 +12,7 @@ public class Messages {
     public static final String SOCIAL_NOT_FOUND = "Social not found";
     public static final String COURSE_NOT_FOUND = "Course not found: ";
     public static final String CERTIFICATE_NOT_FOUND = "Certificate not found: ";
-    public static final String CURRICULUM_NOT_FOUND = "Curriculum not found: ";
+    public static final String RESUME_NOT_FOUND = "Resume not found: ";
 
     /* Bad Request Messages*/
     public static final String INVALID_REQUEST_BODY = "Request body is invalid: ";

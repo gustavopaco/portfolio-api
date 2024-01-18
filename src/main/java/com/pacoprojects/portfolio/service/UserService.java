@@ -33,14 +33,14 @@ public class UserService {
     private final BioRepository bioRepository;
     private final SocialRepository socialRepository;
     private final CertificateRepository certificateRepository;
-    private final CurriculumRepository curriculumRepository;
+    private final ResumeRepository resumeRepository;
     private final SkillMapper skillMapper;
     private final ProjectMapper projectMapper;
     private final BioMapper bioMapper;
     private final SocialMapper socialMapper;
     private final CourseMapper courseMapper;
     private final CertificateMapper certificateMapper;
-    private final CurriculumMapper curriculumMapper;
+    private final ResumeMapper resumeMapper;
     private final JwtUtilService jwtUtilService;
     private final CourseRepository courseRepository;
     private final UserApplicationMapper userApplicationMapper;
@@ -116,10 +116,10 @@ public class UserService {
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
     }
 
-    public CurriculumDto findCurriculumByUsername(@NotBlank String token) {
-        return curriculumRepository.findCurriculumByUserApplicationUsername(validateUser(token).getUsername())
-                .map(curriculumMapper::toDto)
-                .orElseThrow(() -> new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND));
+    public ResumeDto findResumeByUsername(@NotBlank String token) {
+        return resumeRepository.findResumeByUserApplicationUsername(validateUser(token).getUsername())
+                .map(resumeMapper::toDto)
+                .orElseThrow(() -> new RecordNotFoundException(Messages.RESUME_NOT_FOUND));
     }
 
     public UserApplication registerUser(@NotNull RegisterUserApplicationRequestDto registerUserApplicationRequestDto) {
@@ -190,10 +190,10 @@ public class UserService {
         certificateRepository.saveAll(certificates);
     }
 
-    public CurriculumDto createCurriculum(@NotNull CurriculumDto curriculumDto, @NotBlank String token) {
-        Curriculum curriculum = curriculumMapper.toEntity(curriculumDto);
-        curriculum.setUserApplication(validateUser(token));
-        return curriculumMapper.toDto(curriculumRepository.save(curriculum));
+    public ResumeDto createResume(@NotNull ResumeDto resumeDto, @NotBlank String token) {
+        Resume resume = resumeMapper.toEntity(resumeDto);
+        resume.setUserApplication(validateUser(token));
+        return resumeMapper.toDto(resumeRepository.save(resume));
     }
 
     public void updateSkill(@NotNull Long id, @NotNull SkillDto skillDto) {
@@ -286,11 +286,11 @@ public class UserService {
                 );
     }
 
-    public void deleteCurriculum(@NotNull Long id) {
-        curriculumRepository.findById(id)
-                .ifPresentOrElse(curriculumRepository::delete,
+    public void deleteResume(@NotNull Long id) {
+        resumeRepository.findById(id)
+                .ifPresentOrElse(resumeRepository::delete,
                         () -> {
-                            throw new RecordNotFoundException(Messages.CURRICULUM_NOT_FOUND + id);
+                            throw new RecordNotFoundException(Messages.RESUME_NOT_FOUND + id);
                         }
                 );
     }
