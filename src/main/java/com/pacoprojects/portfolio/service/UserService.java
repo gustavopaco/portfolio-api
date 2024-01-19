@@ -288,7 +288,10 @@ public class UserService {
 
     public void deleteResume(@NotNull Long id) {
         resumeRepository.findById(id)
-                .ifPresentOrElse(resumeRepository::delete,
+                .ifPresentOrElse(resume -> {
+                            awsFileUploadService.delete(resume.getUrl());
+                            resumeRepository.delete(resume);
+                        },
                         () -> {
                             throw new RecordNotFoundException(Messages.RESUME_NOT_FOUND + id);
                         }
