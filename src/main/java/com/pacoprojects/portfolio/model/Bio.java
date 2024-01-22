@@ -43,7 +43,8 @@ public class Bio {
     private String testimonial;
 
     @ToString.Exclude
-    @OneToOne(targetEntity = UserApplication.class, optional = false, orphanRemoval = true)
+    /* The attribute orphanRemoval = false, because the user can delete the bio but the userApplication still exists */
+    @OneToOne(targetEntity = UserApplication.class, optional = false, orphanRemoval = false)
     @JoinColumn(name = "user_application_id", nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "user_application_id_fk", value = ConstraintMode.CONSTRAINT))

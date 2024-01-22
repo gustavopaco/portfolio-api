@@ -119,7 +119,7 @@ public class UserService {
     public ResumeDto findResumeByUsername(@NotBlank String token) {
         return resumeRepository.findResumeByUserApplicationUsername(validateUser(token).getUsername())
                 .map(resumeMapper::toDto)
-                .orElseThrow(() -> new RecordNotFoundException(Messages.RESUME_NOT_FOUND));
+                .orElse(null);
     }
 
     public UserApplication registerUser(@NotNull RegisterUserApplicationRequestDto registerUserApplicationRequestDto) {
@@ -258,9 +258,22 @@ public class UserService {
                 });
     }
 
+    /**
+     * @param id
+     * @throws RecordNotFoundException if social not found
+     * Note: On the association @OneToOne between UserApplication and Bio 'bidirectional',
+     *  the (orphanRemoval is set to false) to avoid the deletion of the UserApplication when the Bio is deleted.
+     *  But to remove the association between UserApplication and Bio, first at all, we find Bio by 'Id'
+     *  and then get the Parent UserApplication and remove the association calling 'removeAssignedBio()' method.
+     *  Finally, we save the Parent UserApplication. This way, we can remove the association between UserApplication and Bio.
+     */
     public void deleteBio(@NotNull Long id) {
         bioRepository.findById(id)
-                .ifPresentOrElse(bioRepository::delete, () -> {
+                .ifPresentOrElse(bio -> {
+                    UserApplication userApplication = bio.getUserApplication();
+                    userApplication.removeAssignedBio();
+                    userApplicationRepository.save(userApplication);
+                }, () -> {
                     throw new RecordNotFoundException(Messages.BIO_NOT_FOUND + id);
                 });
     }
@@ -286,6 +299,12 @@ public class UserService {
                 );
     }
 
+    /**
+     * @param id
+     * @throws RecordNotFoundException if resume not found
+     * Note: On the association @OneToOne between UserApplication and Resume 'unidirectional',
+     *  the (orphanRemoval is set to false) to avoid the deletion of the UserApplication when the Resume is deleted.
+     */
     public void deleteResume(@NotNull Long id) {
         resumeRepository.findById(id)
                 .ifPresentOrElse(resume -> {

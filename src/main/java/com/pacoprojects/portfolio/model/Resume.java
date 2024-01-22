@@ -29,7 +29,8 @@ public class Resume {
     private String contentType;
 
     @ToString.Exclude
-    @OneToOne(targetEntity = UserApplication.class, optional = false, orphanRemoval = true, fetch = FetchType.LAZY)
+    /* The attribute orphanRemoval = false, because the user can delete the resume but the userApplication still exists */
+    @OneToOne(targetEntity = UserApplication.class, optional = false, orphanRemoval = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_application_id", nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_resume_user_application", value = ConstraintMode.CONSTRAINT))

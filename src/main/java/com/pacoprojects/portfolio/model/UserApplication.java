@@ -84,6 +84,14 @@ public class UserApplication implements UserDetails {
     @ToString.Exclude
     private Set<Certificate> certificates = new LinkedHashSet<>();
 
+    public void removeAssignedBio() {
+        this.bio = null;
+    }
+
+    public void removeAssignedSocial() {
+        this.social = null;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + userRoleApplication.name());
