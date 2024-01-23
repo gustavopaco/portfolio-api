@@ -18,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -190,9 +191,13 @@ public class UserService {
         certificateRepository.saveAll(certificates);
     }
 
-    public ResumeDto createResume(@NotNull ResumeDto resumeDto, @NotBlank String token) {
-        Resume resume = resumeMapper.toEntity(resumeDto);
-        resume.setUserApplication(validateUser(token));
+    public ResumeDto createResume(@NotNull MultipartFile file, @NotBlank String path, @NotBlank String token) {
+        String imageUrl = awsFileUploadService.upload(file, path);
+        Resume resume = Resume.builder()
+                .url(imageUrl)
+                .contentType(file.getContentType())
+                .userApplication(validateUser(token))
+                .build();
         return resumeMapper.toDto(resumeRepository.save(resume));
     }
 

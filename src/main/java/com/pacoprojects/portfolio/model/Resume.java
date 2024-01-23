@@ -7,10 +7,12 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
+@Builder
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "resume")
 @Entity
 public class Resume {

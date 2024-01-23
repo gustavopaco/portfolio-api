@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -140,10 +141,11 @@ public class UserController {
     }
 
     @PostMapping("resume")
-    public ResponseEntity<Void> createResume(@RequestBody @Valid @NotNull ResumeDto resumeDto,
-                                                 @RequestHeader("Authorization") @NotBlank String token) {
+    public ResponseEntity<Void> createResume(@RequestBody @Valid @NotNull MultipartFile file,
+                                             @RequestParam String path,
+                                             @RequestHeader("Authorization") @NotBlank String token) {
         final String LOCATION = "/user/resume/";
-        return ResponseEntity.created(URI.create(LOCATION + userService.createResume(resumeDto, token).id())).build();
+        return ResponseEntity.created(URI.create(LOCATION + userService.createResume(file, path, token).id())).build();
     }
 
     @PutMapping("skill/{id}")
