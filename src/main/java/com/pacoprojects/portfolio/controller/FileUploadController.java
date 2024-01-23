@@ -18,8 +18,9 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestPart @NotNull MultipartFile file,
-                                         @RequestParam String folder) {
-        String objectUrl = awsS3Service.upload(file, folder);
+                                         @RequestParam(required = false, defaultValue = "false") Boolean isTemporary,
+                                         @RequestParam String path) {
+        String objectUrl = awsS3Service.upload(file, path, isTemporary);
         return ResponseEntity.ok(objectUrl);
     }
 

@@ -18,6 +18,11 @@ public class AwsConfiguration {
     private String region;
     @Value("${aws.s3.bucket.name}")
     private String bucketName;
+    @Value("${aws.s3.bucket.path}")
+    private String bucketPath;
+    @Value("${aws.s3.bucket.temp.name}")
+    private String tempBucketName;
+    private static final String SEPARATOR_SLASH = "/";
 
     public AwsCredentials getAwsCredentials() {
         return AwsBasicCredentials.create(accessKey, secretKey);
@@ -25,5 +30,32 @@ public class AwsConfiguration {
 
     public Region getAwsRegion() {
         return Region.of(region);
+    }
+
+    private String formatPath(String folder) {
+        if (bucketPath.endsWith(SEPARATOR_SLASH)) {
+            return bucketPath + folder;
+        }
+        return bucketPath + SEPARATOR_SLASH + folder;
+    }
+
+    public String getPathAvatar() {
+        return formatPath("avatars");
+    }
+
+    public String getPathCertificates() {
+        return formatPath("certificates");
+    }
+
+    public String getPathProjects() {
+        return formatPath("projects");
+    }
+
+    public String getPathResume() {
+        return formatPath("resumes");
+    }
+
+    public String getPathSkills() {
+        return formatPath("skills");
     }
 }

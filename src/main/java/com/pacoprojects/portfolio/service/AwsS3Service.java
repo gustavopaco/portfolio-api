@@ -53,19 +53,22 @@ public class AwsS3Service implements FileUploadService{
     }
 
     @Override
-    public String upload(@NotNull MultipartFile file, String path) {
+    public String upload(@NotNull MultipartFile file, String path, boolean isTemporary) {
 
         final String DEFAULT_PATH = (path == null || path.isEmpty()) ? "default" : path;
 
         // create S3 Client
         try (S3Client s3Client = getS3Client()) {
 
+            // choose bucketName based on isTemporary
+            String bucketName = getBucketName(isTemporary);
+
             // prepare file name
             String fileName = prepareFileName(file.getOriginalFilename());
 
             // PutObjectRequest
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(awsConfiguration.getBucketName())
+                    .bucket(bucketName)
                     .key(DEFAULT_PATH + SEPARATOR_SLASH + fileName)
                     .contentType(file.getContentType())
                     .build();
@@ -78,7 +81,7 @@ public class AwsS3Service implements FileUploadService{
 
             // if upload is successful, return object URL
             String objectURL = s3Client.utilities().getUrl(builder -> builder
-                    .bucket(awsConfiguration.getBucketName())
+                    .bucket(bucketName)
                     .key(DEFAULT_PATH + SEPARATOR_SLASH + fileName))
                     .toString();
 
@@ -96,6 +99,10 @@ public class AwsS3Service implements FileUploadService{
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.INTERNAL_ERROR, e.getCause());
         }
+    }
+
+    private String getBucketName(boolean isTemporary) {
+        return isTemporary ? awsConfiguration.getTempBucketName() : awsConfiguration.getBucketName();
     }
 
     private String prepareFileName(String fileName) {

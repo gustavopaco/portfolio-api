@@ -1,5 +1,6 @@
 package com.pacoprojects.portfolio.service;
 
+import com.pacoprojects.portfolio.config.AwsConfiguration;
 import com.pacoprojects.portfolio.constants.Messages;
 import com.pacoprojects.portfolio.dto.*;
 import com.pacoprojects.portfolio.email.EmailMessage;
@@ -48,6 +49,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final FileUploadService awsFileUploadService;
+    private final AwsConfiguration awsConfiguration;
 
     public List<SkillProjection> listSkillsByUserNickname(@NotBlank String nickname) {
         return userApplicationRepository.findByNickname(nickname)
@@ -191,8 +193,8 @@ public class UserService {
         certificateRepository.saveAll(certificates);
     }
 
-    public ResumeDto createResume(@NotNull MultipartFile file, @NotBlank String path, @NotBlank String token) {
-        String imageUrl = awsFileUploadService.upload(file, path);
+    public ResumeDto createResume(@NotNull MultipartFile file, @NotBlank String token) {
+        String imageUrl = awsFileUploadService.upload(file, awsConfiguration.getPathResume(), false);
         Resume resume = Resume.builder()
                 .url(imageUrl)
                 .contentType(file.getContentType())

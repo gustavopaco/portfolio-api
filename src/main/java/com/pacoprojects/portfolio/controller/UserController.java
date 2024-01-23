@@ -142,10 +142,9 @@ public class UserController {
 
     @PostMapping("resume")
     public ResponseEntity<Void> createResume(@RequestBody @Valid @NotNull MultipartFile file,
-                                             @RequestParam String path,
                                              @RequestHeader("Authorization") @NotBlank String token) {
         final String LOCATION = "/user/resume/";
-        return ResponseEntity.created(URI.create(LOCATION + userService.createResume(file, path, token).id())).build();
+        return ResponseEntity.created(URI.create(LOCATION + userService.createResume(file, token).id())).build();
     }
 
     @PutMapping("skill/{id}")
