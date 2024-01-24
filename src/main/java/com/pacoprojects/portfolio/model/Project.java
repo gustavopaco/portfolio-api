@@ -57,6 +57,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"))
     private Set<String> tags = new LinkedHashSet<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<ProjectSectionBlock> projectSectionBlocks = new LinkedHashSet<>();
 

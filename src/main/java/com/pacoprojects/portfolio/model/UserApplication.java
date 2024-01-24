@@ -84,6 +84,10 @@ public class UserApplication implements UserDetails {
     @ToString.Exclude
     private Set<Certificate> certificates = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OneToOne(mappedBy = "userApplication", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Resume resume;
+
     public void removeAssignedBio() {
         this.bio = null;
     }

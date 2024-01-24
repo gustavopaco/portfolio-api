@@ -15,18 +15,18 @@ import java.util.Optional;
 @Repository
 public interface UserApplicationRepository extends JpaRepository<UserApplication, Long> {
 
-    @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social"})
+    @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social", "resume"})
     Optional<UserApplication> findByUsername(String username);
 
-    @EntityGraph(attributePaths = {"bio", "social"})
+    @EntityGraph(attributePaths = {"bio", "social", "resume"})
     Optional<UserApplication> findByNickname(String nickname);
 
     Optional<UserApplicationProjection> findUserApplicationByUsername(String username);
 
-    @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social", "skills", "projects", "courses", "certificates"})
+    @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social", "skills", "projects", "courses", "certificates", "resume"})
     Optional<UserApplicationProjection> findUserApplicationByNickname(String nickname);
 
-    @EntityGraph(attributePaths = {"bio", "social"})
+    @EntityGraph(attributePaths = {"bio", "social", "resume"})
     @Query("SELECT u FROM UserApplication u WHERE u.nickname = ?1")
     Optional<UserApplicationBioSocialProjection> findUserApplicationBioSocialProjectionByNickname(String nickname);
 
