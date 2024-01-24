@@ -2,6 +2,7 @@ package com.pacoprojects.portfolio.service;
 
 import com.pacoprojects.portfolio.config.AwsConfiguration;
 import com.pacoprojects.portfolio.constants.Messages;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AwsS3Service implements FileUploadService{
+public class AwsS3Service implements FileUploadService {
 
     private final AwsConfiguration awsConfiguration;
     static final String SEPARATOR_UNDERSCORE = "_";
@@ -80,9 +81,10 @@ public class AwsS3Service implements FileUploadService{
             s3Client.putObject(putObjectRequest, requestBody);
 
             // if upload is successful, return object URL
-            String objectURL = s3Client.utilities().getUrl(builder -> builder
-                    .bucket(bucketName)
-                    .key(DEFAULT_PATH + SEPARATOR_SLASH + fileName))
+            String objectURL = s3Client.utilities()
+                    .getUrl(builder -> builder
+                            .bucket(bucketName)
+                            .key(DEFAULT_PATH + SEPARATOR_SLASH + fileName))
                     .toString();
 
             // return decoded URL
@@ -93,6 +95,68 @@ public class AwsS3Service implements FileUploadService{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage, e.getCause());
         } catch (AwsServiceException e) {
             String errorMessage = Messages.AWS_SERVICE_EXCEPTION + file.getOriginalFilename();
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.statusCode()), errorMessage, e.getCause());
+        } catch (SdkClientException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.SDK_CLIENT_EXCEPTION, e.getCause());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.INTERNAL_ERROR, e.getCause());
+        }
+    }
+
+    @Override
+    public String moveFile(@NotBlank String oldPath, @NotBlank String newPath) {
+        try (S3Client s3Client = getS3Client()) {
+
+            String oldPathKey = extractPathKeyFromUrl(oldPath);
+            String key = extractKeyFromPath(oldPathKey);
+
+            // copy object from tempBucket to finalBucket
+            s3Client.copyObject(builder -> builder
+                    .sourceBucket(awsConfiguration.getTempBucketName())
+                    .sourceKey(oldPathKey)
+                    .destinationBucket(awsConfiguration.getBucketName())
+                    .destinationKey(newPath + SEPARATOR_SLASH + key));
+
+            // delete object from tempBucket
+            s3Client.deleteObject(builder -> builder
+                    .bucket(awsConfiguration.getTempBucketName())
+                    .key(oldPathKey));
+
+            // return new object URL
+            String objectURL = s3Client.utilities()
+                    .getUrl(builder -> builder
+                            .bucket(awsConfiguration.getBucketName())
+                            .key(newPath + SEPARATOR_SLASH + key))
+                    .toString();
+
+            // return decoded URL
+            return URLDecoder.decode(objectURL, StandardCharsets.UTF_8);
+
+        } catch (AwsServiceException e) {
+            String errorMessage = Messages.AWS_SERVICE_EXCEPTION + oldPath;
+            throw new ResponseStatusException(HttpStatusCode.valueOf(e.statusCode()), errorMessage, e.getCause());
+        } catch (SdkClientException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.SDK_CLIENT_EXCEPTION, e.getCause());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.INTERNAL_ERROR, e.getCause());
+        }
+    }
+
+    @Override
+    @Async
+    public void delete(String key) {
+
+        final String OBJECT_KEY = extractPathKeyFromUrl(key);
+
+        try (S3Client s3Client = getS3Client()) {
+
+            // delete file
+            s3Client.deleteObject(builder -> builder
+                    .bucket(awsConfiguration.getBucketName())
+                    .key(OBJECT_KEY));
+
+        } catch (AwsServiceException e) {
+            String errorMessage = Messages.AWS_SERVICE_EXCEPTION + key;
             throw new ResponseStatusException(HttpStatusCode.valueOf(e.statusCode()), errorMessage, e.getCause());
         } catch (SdkClientException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.SDK_CLIENT_EXCEPTION, e.getCause());
@@ -117,26 +181,19 @@ public class AwsS3Service implements FileUploadService{
         return UUID.randomUUID() + SEPARATOR_UNDERSCORE + fileName;
     }
 
-    @Override
-    @Async
-    public void delete(String key) {
-
-        final String OBJECT_KEY = key.split(".com/")[1];
-
-        try (S3Client s3Client = getS3Client()) {
-
-            // delete file
-            s3Client.deleteObject(builder -> builder
-                    .bucket(awsConfiguration.getBucketName())
-                    .key(OBJECT_KEY));
-
-        } catch (AwsServiceException e) {
-            String errorMessage = Messages.AWS_SERVICE_EXCEPTION + key;
-            throw new ResponseStatusException(HttpStatusCode.valueOf(e.statusCode()), errorMessage, e.getCause());
-        } catch (SdkClientException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.SDK_CLIENT_EXCEPTION, e.getCause());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Messages.INTERNAL_ERROR, e.getCause());
+    private String extractPathKeyFromUrl(String url) {
+        if (!url.contains(".com/")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Messages.INVALID_URL);
         }
+        String[] urlParts = url.split(".com/");
+        return urlParts[1];
+    }
+
+    private String extractKeyFromPath(String path) {
+        if (path.contains(SEPARATOR_SLASH)) {
+            String[] pathParts = path.split(SEPARATOR_SLASH);
+            return pathParts[pathParts.length - 1];
+        }
+        return path;
     }
 }

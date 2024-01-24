@@ -16,6 +16,7 @@ public class Messages {
 
     /* Bad Request Messages*/
     public static final String INVALID_REQUEST_BODY = "Request body is invalid: ";
+    public static final String INVALID_URL = "Invalid url";
     /*Jwt Token Messages*/
     public static final String TOKEN_EXPIRED = "Token expired";
     public static final String INVALID_TOKEN = "Invalid token";

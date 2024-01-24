@@ -266,7 +266,7 @@ public class UserService {
     }
 
     /**
-     * @param id
+     * @param id of the bio to be deleted
      * @throws RecordNotFoundException if social not found
      * Note: On the association @OneToOne between UserApplication and Bio 'bidirectional',
      *  the (orphanRemoval is set to false) to avoid the deletion of the UserApplication when the Bio is deleted.
@@ -307,7 +307,7 @@ public class UserService {
     }
 
     /**
-     * @param id
+     * @param id of the resume to be deleted
      * @throws RecordNotFoundException if resume not found
      * Note: On the association @OneToOne between UserApplication and Resume 'unidirectional',
      *  the (orphanRemoval is set to false) to avoid the deletion of the UserApplication when the Resume is deleted.
