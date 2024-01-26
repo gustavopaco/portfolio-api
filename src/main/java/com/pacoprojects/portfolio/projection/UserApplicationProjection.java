@@ -20,6 +20,8 @@ public interface UserApplicationProjection {
 
     Set<CertificateProjection> getCertificates();
 
+    ResumeInfo getResume();
+
     /**
      * Projection for {@link com.pacoprojects.portfolio.model.Skill}
      */
@@ -67,5 +69,16 @@ public interface UserApplicationProjection {
         String getInstagram();
 
         String getFacebook();
+    }
+
+    /**
+     * Projection for {@link com.pacoprojects.portfolio.model.Resume}
+     */
+    interface ResumeInfo {
+        Long getId();
+
+        String getUrl();
+
+        String getContentType();
     }
 }
