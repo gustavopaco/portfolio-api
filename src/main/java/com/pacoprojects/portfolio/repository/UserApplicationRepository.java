@@ -1,9 +1,9 @@
 package com.pacoprojects.portfolio.repository;
 
+import com.pacoprojects.portfolio.model.UserApplication;
+import com.pacoprojects.portfolio.projection.UserApplicationBasicSearch;
 import com.pacoprojects.portfolio.projection.UserApplicationBioSocialProjection;
 import com.pacoprojects.portfolio.projection.UserApplicationProjection;
-import com.pacoprojects.portfolio.projection.UserApplicationBasicSearch;
-import com.pacoprojects.portfolio.model.UserApplication;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +25,18 @@ public interface UserApplicationRepository extends JpaRepository<UserApplication
 
     @EntityGraph(attributePaths = {"tokenConfirmations", "bio", "social", "skills", "projects", "courses", "certificates", "resume"})
     Optional<UserApplicationProjection> findUserApplicationByNickname(String nickname);
+
+    @Query(value = """
+            SELECT DISTINCT ua
+            FROM UserApplication ua
+            LEFT JOIN FETCH ua.projects p
+            LEFT JOIN FETCH ua.bio b
+            LEFT JOIN FETCH ua.social so
+            LEFT JOIN FETCH ua.certificates ce
+            LEFT JOIN FETCH ua.resume r
+            WHERE ua.nickname = :nickname
+            """)
+    Optional<UserApplication> findUserApplicationDataByNickname(String nickname);
 
     @EntityGraph(attributePaths = {"bio", "social", "resume"})
     @Query("SELECT u FROM UserApplication u WHERE u.nickname = ?1")

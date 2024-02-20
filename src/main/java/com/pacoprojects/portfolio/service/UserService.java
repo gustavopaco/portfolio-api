@@ -21,8 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -99,17 +100,12 @@ public class UserService {
     }
 
     public UserApplicationDto getUserData(@NotBlank String nickname) {
-        UserApplication userApplication = userApplicationRepository.findUserApplicationByNickname(nickname)
-                .map(userApplicationMapper::toEntity)
+        UserApplication userApplication = userApplicationRepository.findUserApplicationDataByNickname(nickname)
                 .orElseThrow(() -> new RecordNotFoundException(Messages.USER_NOT_FOUND));
 
-        userApplication.setSkills(userApplication.getSkills().stream()
-                .sorted(Comparator.comparing(Skill::getId))
-                .collect(Collectors.toCollection(LinkedHashSet::new)));
+        userApplication.setSkills(skillRepository.findAllByUserApplicationNickname(nickname));
 
-        userApplication.setCourses(userApplication.getCourses().stream()
-                .sorted(Comparator.comparing(Course::getEndDate).reversed())
-                .collect(Collectors.toCollection(LinkedHashSet::new)));
+        userApplication.setCourses(courseRepository.findAllByUserApplicationNickname(nickname));
 
         return userApplicationMapper.toDto(userApplication);
     }
